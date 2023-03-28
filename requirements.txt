@@ -1,0 +1,8 @@
+django-ckeditor==6.5.1
+django-cors-headers==3.14.0
+django-jazzmin==2.6.0
+django-phonenumber-field==7.0.2
+phonenumbers==8.13.7
+pip-chill==1.0.1
+psycopg2==2.9.5
+python-dotenv==1.0.0
