@@ -15,6 +15,9 @@
             rel="stylesheet"
             href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
     />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+          integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+          crossorigin="anonymous" referrerpolicy="no-referrer"/>
 </head>
 <body>
 
@@ -86,10 +89,15 @@
                         <ul>
                             <form action="/accounts/google/login/" method="post">
                                 {% csrf_token %}
-                                <button class="btn btn-outline-google-plus btn-sm d-block w-100" href="#">
-                                    <li><i class="sp-google">
-                                        Sign-Up With Google
-                                    </i></li>
+                                <button class="btn btn-outline-google-plus btn-sm d-block w-100"
+                                        onclick="signInWithGoogle()">
+                                    <i class="fa-brands fa-google text-xl"></i>
+                                    Sign up with Google
+                                </button>
+                                <button class="btn btn-outline-google-plus btn-sm d-block w-100"
+                                        onclick="signInWithFacebook()">
+                                    <i class="fa-brands fa-facebook"></i>
+                                    Sign up with Facebook
                                 </button>
                             </form>
                         </ul>
