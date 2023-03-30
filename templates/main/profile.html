@@ -99,7 +99,7 @@
 
 for(i = 0; i < follows.length; i++) {
   console.log(follows[i].innerHTML)
- 
+
   follows[i].addEventListener('click', function(){
   follow_id=this.dataset.id
   action = this.dataset.action
@@ -115,12 +115,12 @@ for(i = 0; i < follows.length; i++) {
     this.style.color = '#fff'
     this.dataset.action = "follow"
   }
-  
-  
+
+
   console.log(follow_id)
   user='{{request.user.id}}'
   followupdate(follow_id,user,action);
-  
+
 
 })
 }
@@ -128,7 +128,7 @@ for(i = 0; i < follows.length; i++) {
 
 
 function followupdate(id,user,action){
-	    
+
       console.log(user + " started following  " +  follow_id)
 		  var url = 'api/follow/create/'
 
@@ -148,7 +148,7 @@ function followupdate(id,user,action){
                 return response.json()
             })
 		.then((data) => {
-		    
+
 		});
 }
     </script>

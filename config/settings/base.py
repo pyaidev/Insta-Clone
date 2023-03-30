@@ -1,6 +1,6 @@
 from environ import environ
 
-from config.ckeditor_conf import *  # noqa
+# from config.ckeditor_conf import *  # noqa
 from config.jazzmin_conf import *  # noqa
 from pathlib import Path
 import os

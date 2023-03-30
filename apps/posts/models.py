@@ -3,25 +3,25 @@ from django.utils.translation import gettext_lazy as _
 from ckeditor.fields import RichTextField
 
 from apps.common.models import TimeStampedModel, Tag
-from apps.users.models import CustomUser
+from apps.users.models import User
+from apps.posts.choices import MediaTypes
 
 
 # Create your models here.
 class Post(TimeStampedModel):
     user = models.ForeignKey(
-        CustomUser, on_delete=models.CASCADE, related_name='posts',
+        User, on_delete=models.CASCADE, related_name='posts',
         verbose_name=_("user"),
     )
-    description = RichTextField()
-    tags = models.ArrayField(models.CharField(max_length=255))
-    is_comment = models.BooleanField(default=True)
+    text = RichTextField()
+    allow_commentary = models.BooleanField(default=True)
 
     def __str__(self):
-        return f"{self.user.username} | {self.description[:16]}..."
+        return f"{self.user.username} | {self.text[:16]}..."
 
     @property
     def likes_count(self):
-        like = Like.objects.filter(post_id=self.id).count()
+        like = PostLike.objects.filter(post_id=self.id).count()
         return like
 
     @property
@@ -44,7 +44,9 @@ class PostTag(TimeStampedModel):
 
 
 class PostMedia(TimeStampedModel):
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='post_medias')
     file = models.FileField(upload_to='posts/')
+    media_type = models.CharField(max_length=3, choices=MediaTypes.choices, default=MediaTypes.IMAGE)
 
     class Meta:
         verbose_name = 'PostMedia'
@@ -52,8 +54,11 @@ class PostMedia(TimeStampedModel):
 
 
 class Comment(TimeStampedModel):
-    user = models.ForeignKey('profiles.Profile', models.CASCADE)
-    post = models.ForeignKey('posts.Post', models.CASCADE, limit_choices_to={'is_comment': True})
+    user = models.ForeignKey('users.User', models.CASCADE)
+    post = models.ForeignKey(
+        'posts.Post', models.CASCADE, related_name='comments',
+        limit_choices_to={'allow_commentary': True}
+    )
     parent = models.ForeignKey('self', models.SET_NULL, null=True, blank=True, related_name='replies')
     text = models.TextField()
 
@@ -62,16 +67,16 @@ class Comment(TimeStampedModel):
 
     class Meta:
         ordering = ['-created_at']
-        verbose_name = 'comment'
-        verbose_name_plural = 'comments'
+        verbose_name = _('comment')
+        verbose_name_plural = _('comments')
 
 
-class Like(TimeStampedModel):
-    user = models.ForeignKey('profiles.Profile', models.CASCADE, related_name='likes')
+class PostLike(TimeStampedModel):
+    user = models.ForeignKey('users.User', models.CASCADE, related_name='likes')
     post = models.ForeignKey('posts.Post', models.CASCADE, related_name='likes')
 
     def __str__(self):
-        return self.post.description
+        return f"{self.user} | {self.post}"
 
     class Meta:
         verbose_name = 'Like'
