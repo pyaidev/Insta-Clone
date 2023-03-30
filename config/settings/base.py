@@ -21,7 +21,8 @@ DJANGO_APPS = [
 ]
 
 CUSTOM_APPS = [
-
+    'apps.users',
+    'apps.common',
 ]
 THIRD_PARTY_APPS = [
     "ckeditor",
@@ -104,3 +105,5 @@ MEDIA_URL = 'media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTH_USER_MODEL = 'users.CustomUser'
