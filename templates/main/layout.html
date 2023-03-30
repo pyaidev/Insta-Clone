@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+  {%load static%}
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Instagram-Clone</title>
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
+    />
+    <link rel="stylesheet" href= "{% static 'css/style.css' %}" />
+    <link
+      rel="stylesheet"
+      href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+    />
+  </head>
+  <body>
+  {%if request.user.is_authenticated%}
+    
+  {%else%}
+  <div class="popup-window">
+    <button class="close-btn">
+      <i class="fas fa-times"></i>
+    </button>
+    <div class="popup-body">
+      <h1 class="popup-title">We advise  you to  register first!</h1></br>
+        <h3> So that , you   have full access to Instagram-Clone</h3></br>
+        <h6>PS: You can ignore this , if you want to simply browse the website</h6>
+        <a  href="{%url 'register' %}" type="submit" class="submit">Sign Up</a>
+      
+    </div>
+  </div>
+
+  {%endif%}
+
+    <!-- navigation -->
+    <nav class="navbar">
+      <div class="nav-wrapper">
+          <a href="{%url 'main' %}">
+            <img class="brand-img" src="{% static 'images/logo.png' %}" />
+          </a>
+        
+
+        <form class="search-form" action="{%url 'search'%}">
+         {{myFilter.form}}
+         
+        </form>
+        <div class="nav-items">
+          {%if request.user.is_authenticated%}
+          {% with url_name=request.resolver_match.url_name %}
+          <a href="{%url 'main' %}"><i class="icon fas fa-home " {% if url_name == "main" %}style="color:#0d6efd!important;"{% endif %}></i></a>
+          <a href="{%url 'new_post'  request.user.id  %}"><i class="icon fas fa-plus  " {% if url_name == "new_post" %}style="color:#0d6efd!important;"{% endif %}></i></a>
+          <i class="icon fas fa-heart nav_link " {% if url_name == "likes" %}style="color:#0d6efd!important;"{% endif %}></i>
+          <div class="icon user-profile">
+            <a href="{%url 'profile'  request.user.id  %}"> <i class="fas fa-user  "{% if url_name == "profile" %}style="color:#0d6efd!important;"{% endif %}></i></a>
+          </div>
+          {%endwith %}
+          {%else%}
+          {% with url_name=request.resolver_match.url_name %}
+          <a href="{%url 'main' %}"><i class="icon fas fa-home " {% if url_name == "main" %}style="color:#0d6efd!important;"{% endif %}></i></a>
+          <a href="{%url 'no_user_new_post'    %}"><i class="icon fas fa-plus  " {% if url_name == "new_post" %}style="color:#0d6efd!important;"{% endif %}></i></a>
+          <i class="icon fas fa-heart nav_link " {% if url_name == "likes" %}style="color:#0d6efd!important;"{% endif %}></i>
+          <div class="icon user-profile">
+            <a href="{%url 'no_user_profile'   %}"> <i class="fas fa-user  "{% if url_name == "profile" %}style="color:#0d6efd!important;"{% endif %}></i></a>
+          </div>
+          {%endwith %}
+          {%endif%}
+
+        </div>
+      </div>
+    </nav>
+
+  {%block content%}
+
+  {%endblock%}
+
+  <script type="text/javascript">
+    var user = '{{request.user}}'
+    function getCookie(name) {
+		    var cookieValue = null;
+		    if (document.cookie && document.cookie !== '') {
+		        var cookies = document.cookie.split(';');
+		        for (var i = 0; i < cookies.length; i++) {
+		            var cookie = cookies[i].trim();
+		            // Does this cookie string begin with the name we want?
+		            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+		                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+		                break;
+		            }
+		        }
+		    }
+		    return cookieValue;
+		}
+		var csrftoken = getCookie('csrftoken');
+    const popupWindow = document.querySelector(".popup-window");
+
+    window.addEventListener("load", () => {
+      setTimeout(() => {
+        popupWindow.classList.add("active");
+      }, 2000);
+    });
+
+    const closeWindow = document.querySelector(".close-btn");
+
+    closeWindow.addEventListener("click", () => {
+      popupWindow.classList.remove("active");
+    });
+
+
+    
+</script>
+
+</body>
+</html>

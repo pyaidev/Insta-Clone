@@ -1,0 +1,43 @@
+{% extends 'main/layout.html' %}
+{% load static %}
+{% block content %}
+
+    <div class="camera-container">
+        <div class="camera">
+            <div class="camera-image">
+                <img id="image" src="{% static 'images/empty-placeholder.jpg' %}"/>
+
+                <form action="" method="POST" class="camera-form" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        {{ form.image }}
+                    </div>
+
+
+                    <div class="form-group">
+                        {{ form.description }}
+                    </div>
+
+
+                    <div class="form-group">
+                        <button type="submit" name="upload_image-btn" class="upload-btn">
+                            Post
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!--Script-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+    <script>
+        document.getElementById('files').onchange = function () {
+            var src = URL.createObjectURL(this.files[0])
+            document.getElementById('image').src = src
+        }
+    </script>
+
+    </body>
+    </html>
+{% endblock %}
