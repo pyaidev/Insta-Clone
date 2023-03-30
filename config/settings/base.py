@@ -33,7 +33,8 @@ CUSTOM_APPS = [
     'apps.users',
     'apps.common',
     'apps.posts',
-    'apps.main'
+    'apps.main',
+    'apps.profiles'
 ]
 THIRD_PARTY_APPS = [
     "ckeditor",
