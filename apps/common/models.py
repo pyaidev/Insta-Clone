@@ -9,3 +9,11 @@ class TimeStampedModel(models.Model):
 
     class Meta:
         abstract = True
+
+
+class Tag(TimeStampedModel):
+    name = models.CharField(max_length=256)
+
+    def __str__(self):
+        return self.name
+
