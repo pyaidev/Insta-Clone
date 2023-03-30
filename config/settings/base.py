@@ -33,6 +33,7 @@ CUSTOM_APPS = [
     'apps.users',
     'apps.common',
     'apps.posts',
+    'apps.main'
 ]
 THIRD_PARTY_APPS = [
     "ckeditor",
@@ -40,8 +41,7 @@ THIRD_PARTY_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    'allauth.socialaccount.providers.google',
-    'allauth.socialaccount.providers.facebook'
+    'allauth.socialaccount.providers.google'
 ]
 
 INSTALLED_APPS = DJANGO_APPS + CUSTOM_APPS + THIRD_PARTY_APPS
@@ -129,8 +129,8 @@ AUTH_USER_MODEL = 'users.User'
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'APP': {
-            'client_id': env('CLIENT_ID'),
-            'secret': env('SECRET_ID'),
+            'client_id': env('GOOGLE_CLIENT_ID'),
+            'secret': env('GOOGLE_SECRET_ID'),
             'key': ''
         },
         'SCOPE': [
@@ -142,3 +142,6 @@ SOCIALACCOUNT_PROVIDERS = {
         }
     }
 }
+
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/accounts/login/'

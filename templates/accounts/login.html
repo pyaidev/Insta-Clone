@@ -1,4 +1,5 @@
 {% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -40,7 +41,7 @@
                         {% csrf_token %}
                         <p class="text-center alert-danger" id="error_message">
                             {% if messages %}
-                                Please enter correct credentials!
+                            Please enter correct credentials!
                             {% endif %}
                         </p>
                         <div class="form-group">
@@ -77,6 +78,18 @@
                     </div>
                     <div class="goto">
                         <p>Don't have an account? <a href="{% url 'register' %} ">Sign Up</a></p>
+                    </div>
+                    <div class="row g-2 mt-2">
+                        <ul>
+                            <form action="/accounts/google/login/" method="post">
+                                {% csrf_token %}
+                                <button class="btn btn-outline-google-plus btn-sm d-block w-100"
+                                        onclick="signInWithGoogle()">
+                                    <i class="fa-brands fa-google text-xl"></i>
+                                    Sign in with Google
+                                </button>
+                            </form>
+                        </ul>
                     </div>
                     <div class="app-download">
                         <p>Get the app.</p>
