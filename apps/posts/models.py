@@ -43,55 +43,36 @@ class PostTag(TimeStampedModel):
         return f"{self.tag.name} | {self.post}"
 
 
-from django.contrib.postgres.fields import ArrayField
-from django.db import models
-from django.db.models import FileField, ForeignKey, CASCADE, TextField, CharField, BooleanField, SET_NULL, IntegerField, \
-    Count, PROTECT
-
-
 class PostMedia(TimeStampedModel):
-    file = FileField(upload_to='posts/')
+    file = models.FileField(upload_to='posts/')
 
     class Meta:
         verbose_name = 'PostMedia'
         verbose_name_plural = 'PostMedia'
 
 
-class Post(BaseModel):
-    file = ForeignKey('posts.PostMedia', PROTECT)
-    author = ForeignKey('profiles.Profile', CASCADE)
-    description = TextField()
-    tags = ArrayField(CharField(max_length=255))
-    is_comment = BooleanField(default=True)
+class Comment(TimeStampedModel):
+    user = models.ForeignKey('profiles.Profile', models.CASCADE)
+    post = models.ForeignKey('posts.Post', models.CASCADE, limit_choices_to={'is_comment': True})
+    parent = models.ForeignKey('self', models.SET_NULL, null=True, blank=True, related_name='replies')
+    text = models.TextField()
 
     def __str__(self):
-        return self.description
-
-
-
-
-class Comment(BaseModel):
-    user = ForeignKey('profiles.Profile', CASCADE)
-    post = ForeignKey('posts.Post', CASCADE, limit_choices_to={'is_comment': True})
-    parent = ForeignKey('self', SET_NULL, null=True, blank=True, related_name='replies')
-    text = TextField()
-
-    def __str__(self):
-        return self.text
+        return f"{self.text[:20]}..."
 
     class Meta:
         ordering = ['-created_at']
-        verbose_name = 'Comments'
-        verbose_name_plural = 'Comments'
+        verbose_name = 'comment'
+        verbose_name_plural = 'comments'
 
 
-class Like(BaseModel):
-    user = ForeignKey('profiles.Profile', CASCADE)
-    post = ForeignKey('posts.Post', CASCADE)
+class Like(TimeStampedModel):
+    user = models.ForeignKey('profiles.Profile', models.CASCADE, related_name='likes')
+    post = models.ForeignKey('posts.Post', models.CASCADE, related_name='likes')
 
     def __str__(self):
         return self.post.description
 
     class Meta:
-        verbose_name = 'Likes'
+        verbose_name = 'Like'
         verbose_name_plural = 'Likes'

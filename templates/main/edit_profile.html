@@ -1,0 +1,73 @@
+{%extends 'main/layout.html'%}
+{%load static%}
+{%block content%}
+    <!-- section -->
+    <section class="main">
+      <div class="wrapper">
+        <div class="left-col">
+          <h3>Update Profile</h3>
+
+          <form action="" method="POST" enctype="multipart/form-data">
+            {%csrf_token%}
+            <div class="mb-3">
+              {%if follows.following.image%}
+              <img src="{{follows.following.image.url}}" alt="" />
+              {%else%}
+              <img src="{%static 'images/empty_user.jpg''%}" alt="" />
+            {%endif%}
+              {{form.image}}
+            </div>
+            <div class="mb-3">
+              <label for="email" class="form-label">Email</label>
+             {{form.email}}
+            </div>
+            <div class="mb-3">
+              <label for="username" class="form-label">Username</label>
+              {{form.username}}
+            </div>
+            <div class="mb-3">
+              <label for="bio" class="form-label">Bio</label>
+              {{form.bio}}
+            </div>
+            <div class="mb-3">
+              <input
+                name="update_profile_btn"
+                id="update_profile_btn"
+                class="update-profile-btn"
+                value="update"
+                type="submit"
+              />
+            </div>
+          </form>
+        </div>
+        <div class="right-col">
+          <!--Profile-Card-->
+
+          <div class="profile-card">
+            <div class="profile-pic">
+              {%if follows.following.image%}
+              <img src="{{follows.following.image.url}}" alt="" />
+              {%else%}
+              <img src="{%static 'images/empty_user.jpg''%}" alt="" />
+            {%endif%}
+            </div>
+            <div>
+              <p class="username">username</p>
+              <p class="sub-text">sub-text</p>
+            </div>
+            <button class="logout-btn">logout</button>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- script -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+    <script>
+      document.getElementById('files').onchange = function () {
+      var src = URL.createObjectURL(this.files[0])
+      document.getElementById('image').src = src
+    }
+    </script>
+ {%endblock%}

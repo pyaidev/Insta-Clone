@@ -17,3 +17,8 @@ class Tag(TimeStampedModel):
     def __str__(self):
         return self.name
 
+
+# class Location(TimeStampedModel):
+#     country = models.CharField(max_length=128)
+#     name = models.CharField(max_length=128)
+#     long = models
