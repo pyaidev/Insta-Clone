@@ -8,3 +8,5 @@ pip-chill==1.0.1
 # psycopg2==2.9.5
 # psycopg2-binary==2.9.5
 python-dotenv==1.0.0
+django-crispy-forms==2.0
+crispy-bootstrap5==0.7

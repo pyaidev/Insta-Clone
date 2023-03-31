@@ -39,13 +39,14 @@
     <nav class="navbar">
       <div class="nav-wrapper">
           <a href="{%url 'main' %}">
+
             <img class="brand-img" src="{% static 'images/logo.png' %}" />
           </a>
-        
+
 
         <form class="search-form" action="{%url 'search'%}">
          {{myFilter.form}}
-         
+
         </form>
         <div class="nav-items">
           {%if request.user.is_authenticated%}

@@ -45,7 +45,7 @@ class PostTag(TimeStampedModel):
 
 class PostMedia(TimeStampedModel):
     post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='post_medias')
-    file = models.FileField(upload_to='posts/')
+    file = models.FileField(upload_to='posts/%Y/%m/%d/')
     media_type = models.CharField(max_length=3, choices=MediaTypes.choices, default=MediaTypes.IMAGE)
 
     class Meta:
