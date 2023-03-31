@@ -82,20 +82,26 @@
 
 
                                 <div class="carousel-inner">
-                                <!-- {% for media in media_files %}
-                                    <div class="carousel-item {% if forloop.first %} active {% endif %} ">
-                                        <a href="{{ media.file.url }}">
-                                            <img src="{{ media.file.url }}" class="d-block w-100" alt="...">
-                                        </a>
-                                    </div>
-                                {% endfor %} -->
-                                {% for media in media_files %}
-                                    <div class="carousel-item {% if forloop.first %} active {% endif %} ">
-                                        <video src="{{ media.file.url }}" class="object-fit-contain" type="video/mp4" width="640" height="480" controls></video>
-                                    </div>
-                                {% endfor %}
-
+                                    <!-- {% for media in media_files %}
+                                        <div class="carousel-item {% if forloop.first %} active {% endif %} ">
+                                            <a href="{{ media.file.url }}">
+                                                <img src="{{ media.file.url }}" class="d-block w-100" alt="...">
+                                            </a>
+                                        </div>
+                                    {% endfor %} -->
+                                    {% for media in media_files %}
+                                        <div class="carousel-item {% if forloop.first %} active {% endif %} ">
+                                            {% if media.media_type == "VID" %}
+                                                    <video src="{{ media.file.url }}" class="object-fit-contain" width="640" height="480" controls></video>
+                                            {% else %}
+                                                <a href="{{ media.file.url }}">
+                                                    <img src="{{ media.file.url }}" class="d-block w-100" alt="...">
+                                                </a>
+                                            {% endif %}
+                                        </div>
+                                    {% endfor %}
                                 </div>
+
                                 <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
                                     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
                                     <span class="visually-hidden">Previous</span>

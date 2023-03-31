@@ -1,19 +1,21 @@
-{% extends 'base.html' %}
+{% extends 'posts/base.html' %}
 {% load static %}
 {% load crispy_forms_tags %}
+
+{% block title %}
+    <title>New Post</title>
+{% endblock title %}
+
+{% block style %}
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+<script src="https://kit.fontawesome.com/fc1e235b2e.js"></script>
+<link rel="stylesheet" href="{% static 'assets2/style.css' %}">
+{% endblock style %}
+
 {% block content %}
 <br><br>
-<!DOCTYPE html>
-<html lang="en">
-
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <script src="https://kit.fontawesome.com/fc1e235b2e.js"></script>
-  <link rel="stylesheet" href="{% static 'assets2/style.css' %}">
-  <title>Instagram Login Form</title>
-</head>
 
 <body>
 
@@ -26,10 +28,10 @@
           <div class="logo">
             <h3 style="padding: 20px; font-size: 20px;">Create New Post</h3>
           </div>
-		  <!-- {{form|crispy}} -->
-          {{form.picture}} <br>
-          {{form.caption}} <br>
-          {{form.tags}} <br>
+		  <!-- {{post_form|crispy}} -->
+          {{post_form.text}} <br>
+          {{post_form.allow_commentary}} <br>
+          {{post_form.media_files}} <br>
           <button class="form-btn" type="submit">Post</button>
           <!-- <a href="index.html" class="form-btn" type="submit">Log in</a> -->
           
