@@ -1,3 +1,5 @@
 from django.contrib import admin
 
-# Register your models here.
+from apps.main.models import Story
+
+admin.site.register(Story)

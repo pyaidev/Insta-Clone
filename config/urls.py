@@ -25,7 +25,8 @@ urlpatterns = [
     path('accounts/', include('apps.users.urls')),
     path('accounts/', include('allauth.urls'), name='social'),
     path('posts/', include('apps.posts.urls')),
-    path('', include('apps.main.urls'), name='main')
+    path('', include('apps.main.urls'), name='main'),
+    path('profile/', include('apps.profiles.urls'), name='profile')
 ]
 
 if settings.DEBUG:
