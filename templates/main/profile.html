@@ -1,5 +1,11 @@
 {% extends 'main/base.html' %}
+{%load static%}
 {%block content %}
+
+
+{%block title%}
+<title>Profile</title>
+{%endblock title%}
 
 <header>
     <div class="container">
@@ -8,39 +14,41 @@
 
             <div class="profile-image">
 
-                <img src="https://images.unsplash.com/photo-1513721032312-6a18a42c8763?w=152&h=152&fit=crop&crop=faces"
+                <img src="{{ profile.image.url }}"
                      alt="">
-
             </div>
 
-            <div class="profile-user-settings">
+            <div class="profile-side">
+                <div class="profile-user-settings">
 
-                <h1 class="profile-user-name">janedoe_</h1>
+                    <h1 class="profile-user-name">{{profile.user.username}}</h1>
 
-                <button class="btn profile-edit-btn">Edit Profile</button>
+                    <button class="btn profile-edit-btn">Edit Profile</button>
 
-                <button class="btn profile-settings-btn" aria-label="profile settings"><i class="fas fa-cog"
-                                                                                          aria-hidden="true"></i>
-                </button>
+                    <button class="btn profile-settings-btn" aria-label="profile settings"><i class="fas fa-cog"
+                                                                                              aria-hidden="true"></i>
+                    </button>
 
+                </div>
+
+                <div class="profile-stats">
+
+                    <ul>
+                        <li><span class="profile-stat-count">{{ profile.post_count }}</span> posts</li>
+                        <li><span class="profile-stat-count">{{ followers }} </span> followers</li>
+                        <li><span class="profile-stat-count">{{ profile.followed_by.count }}</span> following</li>
+                    </ul>
+
+                </div>
+
+                <div class="profile-bio">
+
+                    <span class="profile-real-name">{{ profile.user.first_name }} {{ profile.user.last_name }}</span>
+                    <p>{{ profile.bio }}</p>
+
+                </div>
             </div>
 
-            <div class="profile-stats">
-
-                <ul>
-                    <li><span class="profile-stat-count">164</span> posts</li>
-                    <li><span class="profile-stat-count">188</span> followers</li>
-                    <li><span class="profile-stat-count">206</span> following</li>
-                </ul>
-
-            </div>
-
-            <div class="profile-bio">
-
-                <p><span class="profile-real-name">Jane Doe</span> Lorem ipsum dolor sit, amet consectetur adipisicing
-                    elit 📷✈️🏕️</p>
-
-            </div>
 
         </div>
         <!-- End of profile section -->
@@ -52,288 +60,35 @@
 
 <main>
 
+
     <div class="container">
 
         <div class="gallery">
-
+            {% for post in posts %}
             <div class="gallery-item" tabindex="0">
-
-                <img src="https://images.unsplash.com/photo-1511765224389-37f0e77cf0eb?w=500&h=500&fit=crop"
-                     class="gallery-image" alt="">
-
+                {% if post.media_type == 'IMG' %}
+                    <img src="/media/{{post.file}}"
+                         class="gallery-image" alt="">
+                {% else %}
+                    <video controls>
+                        <source src="/media/{{ post.file }}" type="video/mp4">
+                    </video>
+                {% endif %}
                 <div class="gallery-item-info">
 
                     <ul>
-                        <li class="gallery-item-likes"><span class="visually-hidden">Likes:</span><i
-                                class="fas fa-heart" aria-hidden="true"></i> 56
+                        <li class="gallery-item-likes"><span class="visually-hidden">Likes:</span>
+                            <i aria-hidden="true">like: </i> 56
                         </li>
-                        <li class="gallery-item-comments"><span class="visually-hidden">Comments:</span><i
-                                class="fas fa-comment" aria-hidden="true"></i> 2
+                        <li class="gallery-item-comments"><span class="visually-hidden">Comments:</span>
+                            <i aria-hidden="true">comment: </i> 2
                         </li>
                     </ul>
 
                 </div>
-
             </div>
-
-            <div class="gallery-item" tabindex="0">
-
-                <img src="https://images.unsplash.com/photo-1497445462247-4330a224fdb1?w=500&h=500&fit=crop"
-                     class="gallery-image" alt="">
-
-                <div class="gallery-item-info">
-
-                    <ul>
-                        <li class="gallery-item-likes"><span class="visually-hidden">Likes:</span><i
-                                class="fas fa-heart" aria-hidden="true"></i> 89
-                        </li>
-                        <li class="gallery-item-comments"><span class="visually-hidden">Comments:</span><i
-                                class="fas fa-comment" aria-hidden="true"></i> 5
-                        </li>
-                    </ul>
-
-                </div>
-
-            </div>
-
-            <div class="gallery-item" tabindex="0">
-
-                <img src="https://images.unsplash.com/photo-1426604966848-d7adac402bff?w=500&h=500&fit=crop"
-                     class="gallery-image" alt="">
-
-                <div class="gallery-item-type">
-
-                    <span class="visually-hidden">Gallery</span><i class="fas fa-clone" aria-hidden="true"></i>
-
-                </div>
-
-                <div class="gallery-item-info">
-
-                    <ul>
-                        <li class="gallery-item-likes"><span class="visually-hidden">Likes:</span><i
-                                class="fas fa-heart" aria-hidden="true"></i> 42
-                        </li>
-                        <li class="gallery-item-comments"><span class="visually-hidden">Comments:</span><i
-                                class="fas fa-comment" aria-hidden="true"></i> 1
-                        </li>
-                    </ul>
-
-                </div>
-
-            </div>
-
-            <div class="gallery-item" tabindex="0">
-
-                <img src="https://images.unsplash.com/photo-1502630859934-b3b41d18206c?w=500&h=500&fit=crop"
-                     class="gallery-image" alt="">
-
-                <div class="gallery-item-type">
-
-                    <span class="visually-hidden">Video</span><i class="fas fa-video" aria-hidden="true"></i>
-
-                </div>
-
-                <div class="gallery-item-info">
-
-                    <ul>
-                        <li class="gallery-item-likes"><span class="visually-hidden">Likes:</span><i
-                                class="fas fa-heart" aria-hidden="true"></i> 38
-                        </li>
-                        <li class="gallery-item-comments"><span class="visually-hidden">Comments:</span><i
-                                class="fas fa-comment" aria-hidden="true"></i> 0
-                        </li>
-                    </ul>
-
-                </div>
-
-            </div>
-
-            <div class="gallery-item" tabindex="0">
-
-                <img src="https://images.unsplash.com/photo-1498471731312-b6d2b8280c61?w=500&h=500&fit=crop"
-                     class="gallery-image" alt="">
-
-                <div class="gallery-item-type">
-
-                    <span class="visually-hidden">Gallery</span><i class="fas fa-clone" aria-hidden="true"></i>
-
-                </div>
-
-                <div class="gallery-item-info">
-
-                    <ul>
-                        <li class="gallery-item-likes"><span class="visually-hidden">Likes:</span><i
-                                class="fas fa-heart" aria-hidden="true"></i> 47
-                        </li>
-                        <li class="gallery-item-comments"><span class="visually-hidden">Comments:</span><i
-                                class="fas fa-comment" aria-hidden="true"></i> 1
-                        </li>
-                    </ul>
-
-                </div>
-
-            </div>
-
-            <div class="gallery-item" tabindex="0">
-
-                <img src="https://images.unsplash.com/photo-1515023115689-589c33041d3c?w=500&h=500&fit=crop"
-                     class="gallery-image" alt="">
-
-                <div class="gallery-item-info">
-
-                    <ul>
-                        <li class="gallery-item-likes"><span class="visually-hidden">Likes:</span><i
-                                class="fas fa-heart" aria-hidden="true"></i> 94
-                        </li>
-                        <li class="gallery-item-comments"><span class="visually-hidden">Comments:</span><i
-                                class="fas fa-comment" aria-hidden="true"></i> 3
-                        </li>
-                    </ul>
-
-                </div>
-
-            </div>
-
-            <div class="gallery-item" tabindex="0">
-
-                <img src="https://images.unsplash.com/photo-1504214208698-ea1916a2195a?w=500&h=500&fit=crop"
-                     class="gallery-image" alt="">
-
-                <div class="gallery-item-type">
-
-                    <span class="visually-hidden">Gallery</span><i class="fas fa-clone" aria-hidden="true"></i>
-
-                </div>
-
-                <div class="gallery-item-info">
-
-                    <ul>
-                        <li class="gallery-item-likes"><span class="visually-hidden">Likes:</span><i
-                                class="fas fa-heart" aria-hidden="true"></i> 52
-                        </li>
-                        <li class="gallery-item-comments"><span class="visually-hidden">Comments:</span><i
-                                class="fas fa-comment" aria-hidden="true"></i> 4
-                        </li>
-                    </ul>
-
-                </div>
-
-            </div>
-
-            <div class="gallery-item" tabindex="0">
-
-                <img src="https://images.unsplash.com/photo-1515814472071-4d632dbc5d4a?w=500&h=500&fit=crop"
-                     class="gallery-image" alt="">
-
-                <div class="gallery-item-info">
-
-                    <ul>
-                        <li class="gallery-item-likes"><span class="visually-hidden">Likes:</span><i
-                                class="fas fa-heart" aria-hidden="true"></i> 66
-                        </li>
-                        <li class="gallery-item-comments"><span class="visually-hidden">Comments:</span><i
-                                class="fas fa-comment" aria-hidden="true"></i> 2
-                        </li>
-                    </ul>
-
-                </div>
-
-            </div>
-
-            <div class="gallery-item" tabindex="0">
-
-                <img src="https://images.unsplash.com/photo-1511407397940-d57f68e81203?w=500&h=500&fit=crop"
-                     class="gallery-image" alt="">
-
-                <div class="gallery-item-type">
-
-                    <span class="visually-hidden">Gallery</span><i class="fas fa-clone" aria-hidden="true"></i>
-
-                </div>
-
-                <div class="gallery-item-info">
-
-                    <ul>
-                        <li class="gallery-item-likes"><span class="visually-hidden">Likes:</span><i
-                                class="fas fa-heart" aria-hidden="true"></i> 45
-                        </li>
-                        <li class="gallery-item-comments"><span class="visually-hidden">Comments:</span><i
-                                class="fas fa-comment" aria-hidden="true"></i> 0
-                        </li>
-                    </ul>
-
-                </div>
-
-            </div>
-
-            <div class="gallery-item" tabindex="0">
-
-                <img src="https://images.unsplash.com/photo-1518481612222-68bbe828ecd1?w=500&h=500&fit=crop"
-                     class="gallery-image" alt="">
-
-                <div class="gallery-item-info">
-
-                    <ul>
-                        <li class="gallery-item-likes"><span class="visually-hidden">Likes:</span><i
-                                class="fas fa-heart" aria-hidden="true"></i> 34
-                        </li>
-                        <li class="gallery-item-comments"><span class="visually-hidden">Comments:</span><i
-                                class="fas fa-comment" aria-hidden="true"></i> 1
-                        </li>
-                    </ul>
-
-                </div>
-
-            </div>
-
-            <div class="gallery-item" tabindex="0">
-
-                <img src="https://images.unsplash.com/photo-1505058707965-09a4469a87e4?w=500&h=500&fit=crop"
-                     class="gallery-image" alt="">
-
-                <div class="gallery-item-info">
-
-                    <ul>
-                        <li class="gallery-item-likes"><span class="visually-hidden">Likes:</span><i
-                                class="fas fa-heart" aria-hidden="true"></i> 41
-                        </li>
-                        <li class="gallery-item-comments"><span class="visually-hidden">Comments:</span><i
-                                class="fas fa-comment" aria-hidden="true"></i> 0
-                        </li>
-                    </ul>
-
-                </div>
-
-            </div>
-
-            <div class="gallery-item" tabindex="0">
-
-                <img src="https://images.unsplash.com/photo-1423012373122-fff0a5d28cc9?w=500&h=500&fit=crop"
-                     class="gallery-image" alt="">
-
-                <div class="gallery-item-type">
-
-                    <span class="visually-hidden">Video</span><i class="fas fa-video" aria-hidden="true"></i>
-
-                </div>
-
-                <div class="gallery-item-info">
-
-                    <ul>
-                        <li class="gallery-item-likes"><span class="visually-hidden">Likes:</span><i
-                                class="fas fa-heart" aria-hidden="true"></i> 30
-                        </li>
-                        <li class="gallery-item-comments"><span class="visually-hidden">Comments:</span><i
-                                class="fas fa-comment" aria-hidden="true"></i> 2
-                        </li>
-                    </ul>
-
-                </div>
-
-            </div>
-
+            {% endfor %}
         </div>
-        <!-- End of gallery -->
 
         <div class="loader"></div>
 
@@ -342,22 +97,7 @@
 
 </main>
 
-{%endblock content%}
-
-
 <style>
-    /*
-
-All grid code is placed in a 'supports' rule (feature query) at the bottom of the CSS (Line 310).
-
-The 'supports' rule will only run if your browser supports CSS grid.
-
-Flexbox and floats are used as a fallback so that browsers which don't support grid will still recieve a similar layout.
-
-*/
-
-    /* Base Styles */
-
     :root {
         font-size: 10px;
     }
@@ -379,6 +119,13 @@ Flexbox and floats are used as a fallback so that browsers which don't support g
     img {
         display: block;
     }
+
+    .profile-image {
+        display: block;
+        width: 110px;
+        height: 110px;
+    }
+
 
     .container {
         max-width: 93.5rem;
@@ -422,7 +169,7 @@ Flexbox and floats are used as a fallback so that browsers which don't support g
 
     .profile-image {
         float: left;
-        width: calc(33.333% - 1rem);
+        /*width: calc(33.333% - 1rem);*/
         display: flex;
         justify-content: center;
         align-items: center;
@@ -431,6 +178,10 @@ Flexbox and floats are used as a fallback so that browsers which don't support g
 
     .profile-image img {
         border-radius: 50%;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center;
     }
 
     .profile-user-settings,
@@ -466,6 +217,21 @@ Flexbox and floats are used as a fallback so that browsers which don't support g
 
     .profile-stats {
         margin-top: 2.3rem;
+    }
+
+    .profile-image {
+        margin-left: auto;
+    }
+
+    .profile-side {
+        display: flex;
+        flex-direction: column;
+        row-gap: 12px;
+        align-items: flex-start;
+    }
+
+    .profile-stats ul {
+        padding-left: 0 !important;
     }
 
     .profile-stats li {
@@ -534,6 +300,8 @@ Flexbox and floats are used as a fallback so that browsers which don't support g
 
     .gallery-item-likes {
         margin-right: 2.2rem;
+        width: 20px;
+        height: 20px;
     }
 
     .gallery-item-type {
@@ -557,15 +325,6 @@ Flexbox and floats are used as a fallback so that browsers which don't support g
 
     /* Loader */
 
-    .loader {
-        width: 5rem;
-        height: 5rem;
-        border: 0.6rem solid #999;
-        border-bottom-color: transparent;
-        border-radius: 50%;
-        margin: 0 auto;
-        animation: loader 500ms linear infinite;
-    }
 
     /* Media Query */
 
@@ -580,7 +339,6 @@ Flexbox and floats are used as a fallback so that browsers which don't support g
             display: none;
         }
 
-        .profile-image,
         .profile-user-settings,
         .profile-bio,
         .profile-stats {
@@ -588,9 +346,6 @@ Flexbox and floats are used as a fallback so that browsers which don't support g
             width: auto;
         }
 
-        .profile-image img {
-            width: 7.7rem;
-        }
 
         .profile-user-settings {
             flex-basis: calc(100% - 10.7rem);
@@ -633,7 +388,7 @@ Flexbox and floats are used as a fallback so that browsers which don't support g
         .profile-stats ul {
             display: flex;
             text-align: center;
-            padding: 1.2rem 0;
+            /*padding: 1.2rem 0;*/
             border-top: 0.1rem solid #dadada;
             border-bottom: 0.1rem solid #dadada;
         }
@@ -657,13 +412,6 @@ Flexbox and floats are used as a fallback so that browsers which don't support g
         }
     }
 
-    /*
-
-    The following code will only run if your browser supports CSS grid.
-
-    Remove or comment-out the code block below to see how the browser will fall-back to flexbox & floated styling.
-
-    */
 
     @supports (display: grid) {
         .profile {
@@ -674,9 +422,6 @@ Flexbox and floats are used as a fallback so that browsers which don't support g
             align-items: center;
         }
 
-        .profile-image {
-            grid-row: 1 / -1;
-        }
 
         .gallery {
             display: grid;
@@ -684,7 +429,6 @@ Flexbox and floats are used as a fallback so that browsers which don't support g
             grid-gap: 2rem;
         }
 
-        .profile-image,
         .profile-user-settings,
         .profile-stats,
         .profile-bio,
@@ -698,10 +442,6 @@ Flexbox and floats are used as a fallback so that browsers which don't support g
             .profile {
                 grid-template-columns: auto 1fr;
                 grid-row-gap: 1.5rem;
-            }
-
-            .profile-image {
-                grid-row: 1 / 2;
             }
 
             .profile-user-settings {
@@ -727,3 +467,8 @@ Flexbox and floats are used as a fallback so that browsers which don't support g
     }
 
 </style>
+
+
+{%endblock content%}
+
+

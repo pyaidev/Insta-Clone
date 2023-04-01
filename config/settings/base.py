@@ -145,10 +145,10 @@ SOCIALACCOUNT_PROVIDERS = {
         }
     }
 }
-
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/accounts/login/'
 
+APPEND_SLASH = False
 # Crispy Bootstrap 5 settings
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"

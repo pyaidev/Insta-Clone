@@ -4,6 +4,7 @@ from PIL import Image
 from django.conf import settings
 
 from apps.common.models import TimeStampedModel
+from apps.posts.models import Post
 from apps.users.models import User
 from apps.profiles.choices import GENDER_CHOICES
 
@@ -17,6 +18,10 @@ class Profile(TimeStampedModel):
 
     def __str__(self):
         return f'Profile of {self.user.email}'
+
+    @property
+    def post_count(self):
+        return self.user.posts.count()
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
@@ -44,10 +49,3 @@ class Follower(models.Model):
     def __str__(self):
         return f"{str(self.followed_by)}"
 
-    @staticmethod
-    def followers_count(user):
-        return Follower.objects.filter(user=user).all().count()
-
-    @staticmethod
-    def following_count(followed_by):
-        return Follower.objects.filter(followed_by=followed_by).all().count()
