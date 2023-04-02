@@ -17,8 +17,6 @@
 {% block content %}
 <br><br>
 
-<body>
-
   <div id="wrapper">
     <div class="container">
       <div class="phone-app-ddemo"></div>
@@ -28,13 +26,11 @@
           <div class="logo">
             <h3 style="padding: 20px; font-size: 20px;">Create New Post</h3>
           </div>
-		  <!-- {{post_form|crispy}} -->
+<!--		   {{post_form|crispy}}-->
           {{post_form.text}} <br>
-          {{post_form.allow_commentary}} <br>
+          <h5 class="text-start">Allow commentary: </h5> {{post_form.allow_commentary}} <br>
           {{post_form.media_files}} <br>
           <button class="form-btn" type="submit">Post</button>
-          <!-- <a href="index.html" class="form-btn" type="submit">Log in</a> -->
-          
         </form>
         
       </div>
@@ -87,7 +83,5 @@
 
   </div>
 
-</body>
 
-</html>
 {% endblock content %}

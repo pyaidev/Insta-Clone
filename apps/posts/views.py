@@ -6,6 +6,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 from apps.posts.models import Post, PostMedia
+from apps.posts.choices import MediaTypes
 from apps.users.models import User
 from .forms import PostForm
 
@@ -21,7 +22,7 @@ class PostDetailView(View):
 
         return render(
             request,
-            'posts/postdetail.html',
+            'posts/post_detail.html',
             {'post': post, 'comments': comments, 'media_files': media_files, 'media_range': range(media_files.count())}
         )
 
@@ -50,25 +51,19 @@ class PostCreateView(LoginRequiredMixin, View):
 
             for media in media_files:
                 mime_type = magic.from_buffer(media.read(), mime=True)
-                print(mime_type)
                 if mime_type.startswith('video/'):
-                    pass
+                    media_type = MediaTypes.VIDEO
                 elif mime_type.startswith('image/'):
-                    pass
+                    media_type = MediaTypes.IMAGE
                 else:
-                    print('aaa')
                     messages.error(request, "Incorrect media type!", extra_tags='danger')
-                    # return redirect('posts:create')
                     return render(
                         request, 'posts/new_post.html', {'post_form': post_form}
                     )
-                # post_media = PostMedia.objects.create(post=post, file=media)
 
-            # for video_file in videos:
-            #     video = Video.objects.create(post=post, video=video_file)
+                PostMedia.objects.create(post=post, file=media, media_type=media_type)
 
-            # return redirect('posts:post_detail', post_id=post.id)
-            return redirect('posts:create')
+            return redirect('posts:post-detail', post_id=post.id)
 
         # if Form is not valid
         return render(

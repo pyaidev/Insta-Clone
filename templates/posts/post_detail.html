@@ -65,56 +65,56 @@
                             </button>
                         </div>
 
-
-
-
-
+                        <!-- Post Media Content-->
                         <div class="post__content">
                             <div class="post__medias">
-
-                                <div id="carouselExampleIndicators" class="carousel slide">
-                                <div class="carousel-indicators">
-                                    {% for num in media_range %}
-                                        <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="{{ num }}" aria-label="Slide {{ num }}" {% if forloop.first %} aria-current="true" class="active" {% endif %} ></button>
-                                    {% endfor %}
-                                </div>
-
-
-
-                                <div class="carousel-inner">
-                                    <!-- {% for media in media_files %}
-                                        <div class="carousel-item {% if forloop.first %} active {% endif %} ">
-                                            <a href="{{ media.file.url }}">
-                                                <img src="{{ media.file.url }}" class="d-block w-100" alt="...">
-                                            </a>
-                                        </div>
-                                    {% endfor %} -->
+                                {% if media_files.count <= 1 %}
                                     {% for media in media_files %}
                                         <div class="carousel-item {% if forloop.first %} active {% endif %} ">
                                             {% if media.media_type == "VID" %}
                                                     <video src="{{ media.file.url }}" class="object-fit-contain" width="640" height="480" controls></video>
                                             {% else %}
                                                 <a href="{{ media.file.url }}">
-                                                    <img src="{{ media.file.url }}" class="d-block w-100" alt="...">
+                                                    <img src="{{ media.file.url }}" class="post__media" alt="Post Content" style="width:1000%; object-fit: contain;">
                                                 </a>
                                             {% endif %}
                                         </div>
                                     {% endfor %}
-                                </div>
+                                {% else %}
+                                    <div id="carouselExampleIndicators" class="carousel slide">
+                                        <div class="carousel-indicators">
+                                            {% for num in media_range %}
+                                                <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="{{ num }}" aria-label="Slide {{ num }}" {% if forloop.first %} aria-current="true" class="active" {% endif %} ></button>
+                                            {% endfor %}
+                                        </div>
 
-                                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-                                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                                    <span class="visually-hidden">Previous</span>
-                                </button>
-                                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-                                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                                    <span class="visually-hidden">Next</span>
-                                </button>
-                                </div>
+                                        <div class="carousel-inner">
+                                            {% for media in media_files %}
+                                                <div class="carousel-item {% if forloop.first %} active {% endif %} ">
+                                                    {% if media.media_type == "VID" %}
+                                                            <video src="{{ media.file.url }}" class="object-fit-contain" width="640" height="480" controls></video>
+                                                    {% else %}
+                                                        <a href="{{ media.file.url }}">
+                                                            <img src="{{ media.file.url }}" class="d-block w-100" alt="...">
+                                                        </a>
+                                                    {% endif %}
+                                                </div>
+                                            {% endfor %}
+                                        </div>
 
+                                        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Previous</span>
+                                        </button>
+                                        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                            <span class="visually-hidden">Next</span>
+                                        </button>
+                                    </div>
+                                {% endif %}
                             </div>
                         </div>
-
+                        <!-- /Post Media Content-->
 
 
                         <div class="post__footer">
@@ -147,11 +147,14 @@
                             </div>
 
                             <div class="post__infos">
-                                <div class="post__likes">
-                                    <a href="#" class="post__likes-avatar"><!--                                        <img src="assets1/default-user.png" alt="User Picture">-->
-                                    </a>
-                                    <span>{{post.likes}} <a class="post__name--underline" href="#">likes</a> <a href="#"></a></span>
-                                </div>
+                                {% if post.likes_count > 0 %}
+                                    <div class="post__likes">
+                                        <a href="#" class="post__likes-avatar">
+                                            <img src="assets1/default-user.png" alt="User Picture">
+                                        </a>
+                                        <span>{{post.likes_count}} <a class="post__name--underline" href="#">like{% if post.likes_count > 1 %}s{% endif %} </a> <a href="#"></a></span>
+                                    </div>
+                                {% endif %}
 
                                 <div class="post__description">
                                     <span>

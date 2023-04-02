@@ -14,15 +14,15 @@ class Post(TimeStampedModel):
         verbose_name=_("user"),
     )
     text = RichTextField()
-    allow_commentary = models.BooleanField(default=True)
+    allow_commentary = models.BooleanField(default=True, verbose_name=_("allow commentary"))
 
     def __str__(self):
-        return f"{self.user.username} | {self.text[:16]}..."
+        return f"{self.user.username} | {self.text[:32]}..."
 
     @property
     def likes_count(self):
-        like = PostLike.objects.filter(post_id=self.id).count()
-        return like
+        likes_number = PostLike.objects.filter(post_id=self.id).count()
+        return likes_number
 
     @property
     def comments_count(self):
@@ -51,6 +51,9 @@ class PostMedia(TimeStampedModel):
     class Meta:
         verbose_name = 'PostMedia'
         verbose_name_plural = 'PostMedia'
+
+    def __str__(self):
+        return f"{self.media_type} | {self.post}"
 
 
 class Comment(TimeStampedModel):
