@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
-from .forms import RegistrationForm
+from .forms import UsersCreationForm
 
 
 def login_view(request):
@@ -19,20 +19,23 @@ def login_view(request):
     return render(request, 'accounts/login.html', {})
 
 
-def register_view(request):
-    form = RegistrationForm()
+def register(request):
+    form = UsersCreationForm()
     if request.method == "POST":
-        form = RegistrationForm(request.POST)
+        form = UsersCreationForm(request.POST)
         if form.is_valid():
             form.save()
-            username = form.cleaned_data['email']
+            username = form.cleaned_data['username']
             password = form.cleaned_data['password1']
-            print(username)
-            try:
-                user = authenticate(password=password, username=username)
-            except Exception as e:
-                messages.success(request, e)
+
+            user = authenticate(password=password, username=username)
             login(request, user)
             return redirect('main')
 
     return render(request, 'accounts/register.html', {"forms": form})
+
+
+# def logout_user(request):
+#     logout(request)
+#     messages.warning(request, 'You have been logged out!')
+#     return redirect('login')
