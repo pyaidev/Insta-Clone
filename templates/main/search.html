@@ -33,60 +33,60 @@
  
 
     <!--Script-->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>
+<!--    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>-->
 
-    <script>
-        var follows = document.getElementsByClassName('follow-btn')
+<!--    <script>-->
+<!--        var follows = document.getElementsByClassName('follow-btn')-->
 
-for(i = 0; i < follows.length; i++) {
-  console.log(follows[i].innerHTML)
- 
-  follows[i].addEventListener('click', function(){
-  follow_id=this.dataset.id
-  action = this.dataset.action
-  if(this.innerHTML=="Follow"){
-    this.innerHTML="Unfollow"
-    this.style.color = "black"
-    this.dataset.action = "unfollow"
+<!--for(i = 0; i < follows.length; i++) {-->
+<!--  console.log(follows[i].innerHTML)-->
+<!-- -->
+<!--  follows[i].addEventListener('click', function(){-->
+<!--  follow_id=this.dataset.id-->
+<!--  action = this.dataset.action-->
+<!--  if(this.innerHTML=="Follow"){-->
+<!--    this.innerHTML="Unfollow"-->
+<!--    this.style.color = "black"-->
+<!--    this.dataset.action = "unfollow"-->
 
-  }else{
-    this.innerHTML="Follow"
-    this.style.color = "#0d6efd"
-    this.dataset.action = "follow"
-  }
-  
-  
-  console.log(follow_id)
-  user='{{request.user.id}}'
-  followupdate(follow_id,user,action);
-  
+<!--  }else{-->
+<!--    this.innerHTML="Follow"-->
+<!--    this.style.color = "#0d6efd"-->
+<!--    this.dataset.action = "follow"-->
+<!--  }-->
+<!--  -->
+<!--  -->
+<!--  console.log(follow_id)-->
+<!--  user='{{request.user.id}}'-->
+<!--  followupdate(follow_id,user,action);-->
+<!--  -->
 
-})
-}
+<!--})-->
+<!--}-->
 
-function followupdate(id,user,action){
+<!--function followupdate(id,user,action){-->
 
-console.log(user + " started following  " +  follow_id)
-var url = 'api/follow/create/'
+<!--console.log(user + " started following  " +  follow_id)-->
+<!--var url = 'api/follow/create/'-->
 
-fetch(url, {
-method:'POST',
-headers:{
-  'Content-Type':'application/json',
-  'X-CSRFToken':csrftoken,
-},
-body:JSON.stringify({'id':follow_id,'user':user,'action':action})
-})
-.then((response) => {
-          if (!response.ok) {
-              // error processing
-              throw 'Error';
-          }
-          return response.json()
-      })
-.then((data) => {
-  
-});
-}
-    </script>
+<!--fetch(url, {-->
+<!--method:'POST',-->
+<!--headers:{-->
+<!--  'Content-Type':'application/json',-->
+<!--  'X-CSRFToken':csrftoken,-->
+<!--},-->
+<!--body:JSON.stringify({'id':follow_id,'user':user,'action':action})-->
+<!--})-->
+<!--.then((response) => {-->
+<!--          if (!response.ok) {-->
+<!--              // error processing-->
+<!--              throw 'Error';-->
+<!--          }-->
+<!--          return response.json()-->
+<!--      })-->
+<!--.then((data) => {-->
+<!--  -->
+<!--});-->
+<!--}-->
+<!--    </script>-->
   {%endblock%}

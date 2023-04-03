@@ -23,7 +23,14 @@
 
                     <h1 class="profile-user-name">{{profile.user.username}}</h1>
 
-                    <button class="btn profile-edit-btn">Edit Profile</button>
+                    {%if request.user.username == profile.user.username %}
+                    <a href="#" style="text-decoration:none" class="profile-btn profile-edit-btn">Edit Profile</a>
+                    <button
+                            class="profile-btn profile-settings-btn"
+                            aria-label="profile settings">
+                        <i class="fas fa-cog"></i>
+                    </button>
+                    {%endif%}
 
                     <button class="btn profile-settings-btn" aria-label="profile settings"><i class="fas fa-cog"
                                                                                               aria-hidden="true"></i>
@@ -38,8 +45,31 @@
                         <li><span class="profile-stat-count">{{ followers }} </span> followers</li>
                         <li><span class="profile-stat-count">{{ profile.followed_by.count }}</span> following</li>
                     </ul>
+                    {% if not request.user == profile.user %}
+                      {% if request.user.id in profile.user.id %}
+                        <form method="post" action="{% url 'profiles:follow' %}">
+                          {% csrf_token %}
+                          <input type="hidden" name="profile_id" value="{{ profile.user.id }}">
+                          <input type="hidden" name="action" value="unfollow">
+                          <button type="submit" class="follow-btn-user-profile" data-action="unfollow">
+                            <span>Unfollow</span>
+                          </button>
+                        </form>
+                      {% else %}
+                        <form method="post" action="{% url 'profiles:follow' %}">
+                          {% csrf_token %}
+                          <input type="hidden" name="profile_id" value="{{ profile.user.id }}">
+                          <input type="hidden" name="action" value="follow">
+                          <button type="submit" class="follow-btn-user-profile" data-action="follow">
+                            <span>Follow</span>
+                          </button>
+                        </form>
+                      {% endif %}
+                    {% endif %}
+
 
                 </div>
+
 
                 <div class="profile-bio">
 
@@ -64,15 +94,16 @@
     <div class="container">
 
         <div class="gallery">
+            {%if posts%}
             {% for post in posts %}
             <div class="gallery-item" tabindex="0">
                 {% if post.media_type == 'IMG' %}
-                    <img src="/media/{{post.file}}"
-                         class="gallery-image" alt="">
+                <img src="/media/{{post.file}}"
+                     class="gallery-image" alt="">
                 {% else %}
-                    <video controls>
-                        <source src="/media/{{ post.file }}" type="video/mp4">
-                    </video>
+                <video controls>
+                    <source src="/media/{{ post.file }}" type="video/mp4">
+                </video>
                 {% endif %}
                 <div class="gallery-item-info">
 
@@ -88,6 +119,19 @@
                 </div>
             </div>
             {% endfor %}
+            {%else%}
+            <div class="gallery-item">
+                <img src="{% static 'images/no-photo.jpg' %}" style="
+                pointer-events: none;
+                cursor:none!important;
+                width: 86%;
+                height: 50%;
+                user-select: none;
+                border: none !important;
+                display: block;
+              " class="gallery-image" alt=""/>
+            </div>
+            {%endif%}
         </div>
 
         <div class="loader"></div>
@@ -464,11 +508,28 @@
                 margin: 0;
             }
         }
+        .follow-btn-user-profile {
+            background-color: #3897f0;
+            color: #fff;
+            font-weight: bold;
+            font-size: 14px;
+            padding: 8px 16px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color
+                0.3s ease;
+        }
+        .follow-btn-user-profile:hover
+        {
+            background-color: #357ae8;
+        }
     }
 
 </style>
 
 
 {%endblock content%}
+
 
 
