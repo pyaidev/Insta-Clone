@@ -36,8 +36,8 @@ class Post(TimeStampedModel):
 
 
 class PostTag(TimeStampedModel):
-    tag = models.ForeignKey(Tag, on_delete=models.CASCADE, related_name='tag_posts', verbose_name=_("tag"))
-    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='post_tags', verbose_name=_("tag"))
+    tag = models.ForeignKey(Tag, on_delete=models.CASCADE, related_name='posts', verbose_name=_("tag"))
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, related_name='tags', verbose_name=_("post"))
 
     def __str__(self):
         return f"{self.tag.name} | {self.post}"
@@ -63,7 +63,7 @@ class Comment(TimeStampedModel):
         limit_choices_to={'allow_commentary': True}
     )
     parent = models.ForeignKey('self', models.SET_NULL, null=True, blank=True, related_name='replies')
-    text = models.TextField()
+    text = RichTextField()
 
     def __str__(self):
         return f"{self.text[:20]}..."
