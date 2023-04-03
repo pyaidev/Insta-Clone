@@ -7,7 +7,8 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from apps.posts.models import Post, PostMedia, Comment, PostLike
 from apps.posts.choices import MediaTypes
-from .forms import PostForm, CommentForm
+from apps.posts.forms import PostForm, CommentForm
+from apps.posts.utils import extract_tags
 
 
 # Create your views here.
@@ -38,7 +39,7 @@ class PostDetailView(LoginRequiredMixin, View):
             Comment.objects.create(
                 post=post,
                 user=request.user,
-                text=comment_form.cleaned_data['text']
+                text=text
             )
             messages.info(request, "Comment added successfully!", extra_tags='success')
 
@@ -72,8 +73,11 @@ class PostCreateView(LoginRequiredMixin, View):
         post_form = PostForm(data=request.POST, files=request.FILES)
 
         if post_form.is_valid():
-            post = post_form.save(commit=False)
-            post.user = request.user
+            post = Post.objects.create(user=request.user, allow_commentary=post_form.cleaned_data['allow_commentary'])
+
+            # extract tags from post text
+            text = extract_tags(post.id, post_form.cleaned_data['text'])
+            post.text = text
             post.save()
 
             media_files = request.FILES.getlist('media_files')
@@ -105,7 +109,6 @@ class PostCreateView(LoginRequiredMixin, View):
 class PostLikeView(LoginRequiredMixin, View):
 
     def get(self, request, post_id):
-        print('\n\nsdf\n\n')
         post = get_object_or_404(Post, id=post_id)
         user = request.user
 

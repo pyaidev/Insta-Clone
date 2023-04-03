@@ -4,7 +4,7 @@ from apps.posts.models import Post, Comment
 
 
 class PostForm(forms.ModelForm):
-    media_files = forms.FileField(widget=forms.ClearableFileInput(attrs={'multiple': True}), required=False)
+    media_files = forms.FileField(widget=forms.ClearableFileInput(attrs={'multiple': True}), required=True)
 
     class Meta:
         model = Post
