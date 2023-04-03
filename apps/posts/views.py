@@ -4,6 +4,7 @@ from django.views import View
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 
+
 from apps.posts.models import Post, PostMedia, Comment, PostLike
 from apps.posts.choices import MediaTypes
 from apps.posts.forms import PostForm, CommentForm
@@ -34,10 +35,11 @@ class PostDetailView(LoginRequiredMixin, View):
         comment_form = CommentForm(data=request.POST)
 
         if comment_form.is_valid():
+            # if form is valid
             Comment.objects.create(
                 post=post,
                 user=request.user,
-                # text=text
+                text=text
             )
             messages.info(request, "Comment added successfully!", extra_tags='success')
 
