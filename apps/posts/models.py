@@ -13,7 +13,7 @@ class Post(TimeStampedModel):
         User, on_delete=models.CASCADE, related_name='posts',
         verbose_name=_("user"),
     )
-    text = RichTextField()
+    text = RichTextField(null=True, blank=True)
     allow_commentary = models.BooleanField(default=True, verbose_name=_("allow commentary"))
 
     def __str__(self):

@@ -39,7 +39,7 @@ class PostDetailView(LoginRequiredMixin, View):
             Comment.objects.create(
                 post=post,
                 user=request.user,
-                text=text
+                text=comment_form.cleaned_data['text']
             )
             messages.info(request, "Comment added successfully!", extra_tags='success')
 
