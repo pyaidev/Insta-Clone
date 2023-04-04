@@ -1,6 +1,7 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import JsonResponse
-from django.shortcuts import render
+from django.http import JsonResponse, HttpResponseRedirect
+from django.shortcuts import render, redirect, get_object_or_404
+from django.urls import reverse
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
 from django.views.generic import TemplateView, DetailView
@@ -10,7 +11,27 @@ from apps.profiles.models import Profile, Follower
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import DetailView
+
+from .forms import ProfileCreationForm
 from .models import Profile, Follower
+from ..users.models import User
+
+
+def profile(request):
+    form = ProfileCreationForm()
+    if request.method == "POST":
+        form = ProfileCreationForm(request.POST)
+        if form.is_valid():
+            Profile.objects.create(
+                user=request.user,
+                image=form.cleaned_data['image'],
+                bio=form.cleaned_data['bio'],
+                gender=form.cleaned_data['gender']
+            )
+
+            return redirect('profiles:profile_detail', username=request.user.username)
+
+    return render(request, 'accounts/profile.html', {"forms": form})
 
 
 class ProfileDetailTemplateView(LoginRequiredMixin, DetailView):
@@ -25,39 +46,78 @@ class ProfileDetailTemplateView(LoginRequiredMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        user = self.request.user
-        followers = Follower.objects.filter(followed_to__user=user).count()
-        post = PostMedia.objects.filter(post__user__username=self.kwargs.get('username')).values('file',
-                                                                                                 'media_type').order_by(
-            '-created_at')
-
+        profile = self.get_object()
+        followers = Follower.objects.filter(followed_to=profile)
+        post = PostMedia.objects.filter(post__user__username=self.kwargs.get('username')).order_by('-created_at')
+        context['followers_count'] = followers.count()
         context['followers'] = followers
-        context['profile'] = self.get_object()
+
+        context['profile'] = profile
         context['posts'] = post
+
+        if self.request.user.is_authenticated:
+            user_follow = Follower.objects.filter(followed_by=self.request.user.profile, followed_to=profile).exists()
+            context['user_follow'] = user_follow
 
         return context
 
 
-class FollowView(LoginRequiredMixin, View):
-    http_method_names = ['post']
+class FollowView(View):
 
-    @csrf_exempt
-    def dispatch(self, request, *args, **kwargs):
-        return super().dispatch(request, *args, **kwargs)
+    def get(self, request, username):
+        return redirect(request.META.get('HTTP_REFERER'))
 
-    def post(self, request, *args, **kwargs):
-        profile_id = request.POST.get('profile_id')
-        action = request.POST.get('action')
+    def post(self, request, username):
+        following = get_object_or_404(User, username=username)
+        profile_2 = Profile.objects.get(user=following)
+        profile = Profile.objects.get(user=self.request.user)
+        Follower.objects.update_or_create(followed_by=profile, followed_to=profile_2)
+        return redirect(request.META.get('HTTP_REFERER'))
 
-        if profile_id and action:
-            try:
-                profile = Profile.objects.get(id=profile_id)
-                if action == 'follow':
-                    Follower.objects.get_or_create(followed_by=request.user.profile, followed_to=profile)
-                else:
-                    Follower.objects.filter(followed_by=request.user.profile, followed_to=profile).delete()
-                return JsonResponse({'status': 'ok'})
-            except Profile.DoesNotExist:
-                pass
 
-        return JsonResponse({'status': 'error'})
+class UnfollowView(View):
+
+    def get(self, request, username):
+        return redirect(request.META.get('HTTP_REFERER'))
+
+    def post(self, request, username):
+        following = get_object_or_404(User, username=username)
+        profile_2 = Profile.objects.get(user=following)
+        profile = Profile.objects.get(user=self.request.user)
+        user_follow = Follower.objects.filter(followed_by=profile, followed_to=profile_2).first()
+        if user_follow is not None:
+            user_follow.delete()
+
+        return redirect(request.META.get('HTTP_REFERER'))
+
+
+class RemoveFollowerView(View):
+
+    def get(self, request, username):
+        return redirect(request.META.get('HTTP_REFERER'))
+
+    def post(self, request, username):
+        following = get_object_or_404(User, username=username)
+        following2 = Profile.objects.get(user=following)
+        profile = Profile.objects.get(user=self.request.user)
+        user_follow = Follower.objects.filter(followed_by=following2, followed_to=profile).first()
+        if user_follow is not None:
+            user_follow.delete()
+
+        return redirect(request.META.get('HTTP_REFERER'))
+
+
+class RemoveFollowingView(View):
+
+    def get(self, request, username):
+        return redirect(request.META.get('HTTP_REFERER'))
+
+    # def post(self, request, username):
+    #     following = get_object_or_404(User, username=username)
+    #     following2 = Profile.objects.get(user=following)
+    #     profile = Profile.objects.get(user=self.request.user)
+    #     user_follow = Follower.objects.filter(followed_by=profile, followed_to=following2).first()
+    #     if user_follow is not None:
+    #         user_follow.delete()
+    #
+    #     return redirect(request.META.get('HTTP_REFERER'))

@@ -135,20 +135,16 @@
 
                     </a>
                 </span>
-
-            <a href="">
-                <button class="profile-button">
+                <button class="profile-button" >
                     <div class="profile-button__border"></div>
-                    <a href="{% url 'main' %}">
-                        <!--                        <a href="url 'profile' request.user">-->
 
+                    <a href="{% url 'profiles:profile_detail' username=request.user.username %}">
+                        <!--                        <a href="url 'profile' request.user">-->
                         <div class="profile-button__picture" >
-                            <a href="{% url 'profiles:profile_detail' username=request.user.username %}">
                             <img src="{{ request.user.profile.image.url }}" alt="User Picture">
                         </div>
                     </a>
                 </button>
-            </a>
         </div>
     </nav>
 </header>

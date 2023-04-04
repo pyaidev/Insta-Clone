@@ -22,15 +22,24 @@
                 <div class="profile-user-settings">
 
                     <h1 class="profile-user-name">{{profile.user.username}}</h1>
-
-                    {%if request.user.username == profile.user.username %}
+                    {% if request.user.username == profile.user.username %}
                     <a href="#" style="text-decoration:none" class="profile-btn profile-edit-btn">Edit Profile</a>
-                    <button
-                            class="profile-btn profile-settings-btn"
-                            aria-label="profile settings">
+                    <button class="profile-btn profile-settings-btn" aria-label="profile settings">
                         <i class="fas fa-cog"></i>
                     </button>
-                    {%endif%}
+                    {% elif user_follow %}
+                    <form action="{% url 'profiles:unfollow' profile.user.username %}" method="POST">
+                        {% csrf_token %}
+                        <button class="btn profile-edit-btn">Following</button>
+                    </form>
+                    {% else %}
+                    <form action="{% url 'profiles:follow' profile.user.username %}" method="POST">
+                        {% csrf_token %}
+                        <button class="btn profile-edit-btn" style="background-color: blue; color: white;">Follow
+                        </button>
+                    </form>
+                    {% endif %}
+
 
                     <button class="btn profile-settings-btn" aria-label="profile settings"><i class="fas fa-cog"
                                                                                               aria-hidden="true"></i>
@@ -42,32 +51,9 @@
 
                     <ul>
                         <li><span class="profile-stat-count">{{ profile.post_count }}</span> posts</li>
-                        <li><span class="profile-stat-count">{{ followers }} </span> followers</li>
-                        <li><span class="profile-stat-count">{{ profile.followed_by.count }}</span> following</li>
+                        <li data-bs-toggle="modal" data-bs-target="#Followers"><span class="profile-stat-count" >{{ followers_count }} </span> followers</li>
+                        <li data-bs-toggle="modal" data-bs-target="#Followings" ><span  class="profile-stat-count">{{ profile.followed_by.count }}</span> following</li>
                     </ul>
-                    {% if not request.user == profile.user %}
-                      {% if request.user.id in profile.user.id %}
-                        <form method="post" action="{% url 'profiles:follow' %}">
-                          {% csrf_token %}
-                          <input type="hidden" name="profile_id" value="{{ profile.user.id }}">
-                          <input type="hidden" name="action" value="unfollow">
-                          <button type="submit" class="follow-btn-user-profile" data-action="unfollow">
-                            <span>Unfollow</span>
-                          </button>
-                        </form>
-                      {% else %}
-                        <form method="post" action="{% url 'profiles:follow' %}">
-                          {% csrf_token %}
-                          <input type="hidden" name="profile_id" value="{{ profile.user.id }}">
-                          <input type="hidden" name="action" value="follow">
-                          <button type="submit" class="follow-btn-user-profile" data-action="follow">
-                            <span>Follow</span>
-                          </button>
-                        </form>
-                      {% endif %}
-                    {% endif %}
-
-
                 </div>
 
 
@@ -90,34 +76,35 @@
 
 <main>
 
-
+<!--    post part -->
     <div class="container">
 
         <div class="gallery">
             {%if posts%}
             {% for post in posts %}
+            <a href="{% url 'posts:post-detail' post.post.id %}">
             <div class="gallery-item" tabindex="0">
                 {% if post.media_type == 'IMG' %}
                 <img src="/media/{{post.file}}"
                      class="gallery-image" alt="">
                 {% else %}
                 <video controls>
-                    <source src="/media/{{ post.file }}" type="video/mp4">
+                    <source src="/media/{{ post.file }}" type="video/mp4" href="{% url 'posts:post-detail' post.post.id %}">
                 </video>
                 {% endif %}
                 <div class="gallery-item-info">
-
                     <ul>
                         <li class="gallery-item-likes"><span class="visually-hidden">Likes:</span>
-                            <i aria-hidden="true">like: </i> 56
+                            <i aria-hidden="true">like: </i> {{ post.post.likes_count }}
                         </li>
                         <li class="gallery-item-comments"><span class="visually-hidden">Comments:</span>
-                            <i aria-hidden="true">comment: </i> 2
+                            <i aria-hidden="true">comment: </i> {{ post.post.comments_count }}
                         </li>
                     </ul>
 
                 </div>
             </div>
+            </a>
             {% endfor %}
             {%else%}
             <div class="gallery-item">
@@ -140,6 +127,100 @@
     <!-- End of container -->
 
 </main>
+
+<div class="modal fade" id="Followers" tabindex="-1" aria-labelledby="FollowersLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="FollowersLabel">Followers</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="side-menu__suggestions-section">
+
+                    <div class="side-menu__suggestions-content">
+                        {% for follower in followers %}
+                        <div class="side-menu__suggestion">
+                            <a href="{% url 'profiles:profile_detail' follower.followed_by.user.username %}"
+                               class="side-menu__suggestion-avatar">
+                                {% if follower.followed_by.image %}
+                                <img src="{{ follower.followed_by.image.url }}" alt="User Picture">
+                                {% else %}
+                                <img src="{% static 'images/empty-user.png' %}" alt="User Picture">
+                                {% endif %}
+                            </a>
+
+                            <div class="side-menu__suggestion-info">
+                                <a href="{% url 'profiles:profile_detail' follower.followed_by.user.username %}">
+                                    {{ follower.followed_by.user.username }}</a>
+                                <a href="{% url 'profiles:profile_detail' follower.followed_by.user.username %}"><span>@{{ follower.followed_by.user.username }}</span></a>
+                            </div>
+                            {% if request.user.username == profile.user.username %}
+                            <form action="{% url 'profiles:remove_follower' follower.followed_by.user.username %}" method="POST">
+                                {% csrf_token %}
+                                <button class="btn profile-edit-btn">Remove</button>
+                            </form>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--#TODO end this task-->
+<!--<div class="modal fade" id="Followings" tabindex="-1" aria-labelledby="FollowingLabel" aria-hidden="true">-->
+<!--    <div class="modal-dialog modal-dialog-centered">-->
+<!--        <div class="modal-content">-->
+<!--            <div class="modal-header">-->
+<!--                <h1 class="modal-title fs-5" id="FollowingsLabel">Followers</h1>-->
+<!--                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
+<!--            </div>-->
+<!--            <div class="modal-body">-->
+<!--                <div class="side-menu__suggestions-section">-->
+
+<!--                    <div class="side-menu__suggestions-content">-->
+<!--                        {% for follower in followers %}-->
+<!--                        <div class="side-menu__suggestion">-->
+<!--                            <a href="{% url 'profiles:profile_detail' follower.followed_by.user.username %}"-->
+<!--                               class="side-menu__suggestion-avatar">-->
+<!--                                {% if follower.followed_by.image %}-->
+<!--                                <img src="{{ follower.followed_by.image.url }}" alt="User Picture">-->
+<!--                                {% else %}-->
+<!--                                <img src="{% static 'images/empty-user.png' %}" alt="User Picture">-->
+<!--                                {% endif %}-->
+<!--                            </a>-->
+
+<!--                            <div class="side-menu__suggestion-info">-->
+<!--                                <a href="{% url 'profiles:profile_detail' follower.followed_by.user.username %}">-->
+<!--                                    {{ follower.followed_by.user.username }}</a>-->
+<!--                                <a href="{% url 'profiles:profile_detail' follower.followed_by.user.username %}"><span>@{{ follower.followed_by.user.username }}</span></a>-->
+<!--                            </div>-->
+<!--                            {% if request.user.username == profile.user.username %}-->
+<!--                            <form action="{% url 'profiles:remove_follower' follower.followed_by.user.username %}" method="POST">-->
+<!--                                {% csrf_token %}-->
+<!--                                <button class="btn profile-edit-btn">Remove</button>-->
+<!--                            </form>-->
+<!--                            {% endif %}-->
+<!--                        </div>-->
+<!--                        {% endfor %}-->
+
+<!--                    </div>-->
+<!--                </div>-->
+<!--            </div>-->
+<!--            <div class="modal-footer">-->
+<!--                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>-->
+<!--            </div>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+
 
 <style>
     :root {
@@ -318,6 +399,8 @@
         margin: 1rem;
         color: #fff;
         cursor: pointer;
+        width: 100%;
+        height: 100%;
     }
 
     .gallery-item:hover .gallery-item-info,
@@ -517,11 +600,10 @@
             border: none;
             border-radius: 4px;
             cursor: pointer;
-            transition: background-color
-                0.3s ease;
+            transition: background-color 0.3s ease;
         }
-        .follow-btn-user-profile:hover
-        {
+
+        .follow-btn-user-profile:hover {
             background-color: #357ae8;
         }
     }

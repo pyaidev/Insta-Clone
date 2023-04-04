@@ -30,7 +30,7 @@ def register(request):
 
             user = authenticate(password=password, username=username)
             login(request, user)
-            return redirect('main')
+            return redirect('profiles:profile_create')
 
     return render(request, 'accounts/register.html', {"forms": form})
 

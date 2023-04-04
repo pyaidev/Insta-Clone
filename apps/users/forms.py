@@ -4,6 +4,8 @@ from django import forms
 
 
 class UsersCreationForm(UserCreationForm):
+    first_name = forms.CharField(max_length=255)
+    last_name = forms.CharField(max_length=255)
     username = forms.CharField(max_length=255)
     email = forms.EmailField()
     password1 = forms.CharField(max_length=255)
@@ -11,12 +13,14 @@ class UsersCreationForm(UserCreationForm):
 
     class Meta:
         model = User
-        fields = ["username", "password1", "password2", "email"]
+        fields = ["username", "password1", "password2", "email", "first_name", "last_name"]
 
     def __init__(self, *args, **kwargs):
         super(UsersCreationForm, self).__init__(*args, **kwargs)
         self.fields['username'].widget.attrs.update({'placeholder': 'Type your username ...'})
         self.fields['email'].widget.attrs.update({'placeholder': 'Type your email ...'})
+        self.fields['first_name'].widget.attrs.update({'placeholder': 'Type your first_name ...'})
+        self.fields['last_name'].widget.attrs.update({'placeholder': 'Type your last_name ...'})
         self.fields['password1'].widget = forms.PasswordInput(
             attrs={'class': 'login-input', 'id': 'password', 'placeholder': 'Type your password...'})
         self.fields['password2'].widget = forms.PasswordInput(

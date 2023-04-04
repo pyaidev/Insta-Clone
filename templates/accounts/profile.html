@@ -39,7 +39,7 @@
                     <div class="logo">
                         <img src="{% static 'images/logo.png' %}" alt="" class="logo-img"/>
                     </div>
-                    <form action="" class="login-form" method="POST" id="signup-form">
+                    <form action="" class="login-form" method="POST" id="signup-form" enctype="multipart/form-data" >
                         {%csrf_token%}
                         <p class="text-center alert-danger" id="error_message">
                             {%if forms.errors%}
@@ -48,65 +48,25 @@
                         </p>
                         <div class="form-group">
                             <div class="login-input">
-                                {{forms.first_name}}
+                                {{forms.image}}
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="login-input">
-                                {{forms.last_name}}
+                                {{forms.bio}}
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="login-input">
-                                {{forms.email}}
+                                {{forms.gender}}
                             </div>
                         </div>
-
-                        <div class="form-group">
-                            <div class="login-input">
-                                {{forms.username}}
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="login-input">
-                                {{forms.password1}}
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="login-input">
-                                {{forms.password2}}
-
-                            </div>
-                        </div>
-
                         <div class="btn-group">
                             <button class="login-btn" id="signup_btn" type="submit">
-                                Sign Up
+                                Continue
                             </button>
                         </div>
                     </form>
-                    <div class="or">
-                        <hr/>
-                        <span>OR</span>
-                        <hr/>
-                    </div>
-                    <div class="goto">
-                        <p>Already have an account? <a href="{% url 'login' %}">Login</a></p>
-                    </div>
-                    <div class="row g-2 mt-2">
-                        <ul>
-                            <form action="/accounts/google/login/" method="post">
-                                {% csrf_token %}
-                                <button class="btn btn-outline-google-plus btn-sm d-block w-100"
-                                        onclick="signInWithGoogle()">
-                                    <i class="fa-brands fa-google text-xl"></i>
-                                    Sign up with Google
-                                </button>
-                            </form>
-                        </ul>
-                    </div>
                     <div class="app-download">
                         <p>Get the app.</p>
                         <div class="store-link">

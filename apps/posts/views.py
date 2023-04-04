@@ -121,6 +121,6 @@ class PostLikeView(LoginRequiredMixin, View):
         else:
             # if post is not liked yet by this user
             PostLike.objects.create(user=user, post=post)
-            messages.info(request, "You liked this post!", extra_tags='info')
+            messages.info(request, "You liked this post!", extra_tags='success')
 
         return redirect('posts:post-detail', post_id=post.id)
