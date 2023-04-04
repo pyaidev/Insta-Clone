@@ -17,23 +17,6 @@ from .models import Profile, Follower
 from ..users.models import User
 
 
-def profile(request):
-    form = ProfileCreationForm()
-    if request.method == "POST":
-        form = ProfileCreationForm(request.POST)
-        if form.is_valid():
-            Profile.objects.create(
-                user=request.user,
-                image=form.cleaned_data['image'],
-                bio=form.cleaned_data['bio'],
-                gender=form.cleaned_data['gender']
-            )
-
-            return redirect('profiles:profile_detail', username=request.user.username)
-
-    return render(request, 'accounts/profile.html', {"forms": form})
-
-
 class ProfileDetailTemplateView(LoginRequiredMixin, DetailView):
     model = Profile
     context_object_name = 'profile'
@@ -121,3 +104,5 @@ class RemoveFollowingView(View):
     #         user_follow.delete()
     #
     #     return redirect(request.META.get('HTTP_REFERER'))
+
+

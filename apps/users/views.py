@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from .forms import UsersCreationForm
+from ..profiles.forms import ProfileCreationForm
+from ..profiles.models import Profile
 
 
 def login_view(request):
@@ -30,10 +32,26 @@ def register(request):
 
             user = authenticate(password=password, username=username)
             login(request, user)
-            return redirect('profiles:profile_create')
+            return redirect('profile_create')
 
     return render(request, 'accounts/register.html', {"forms": form})
 
+
+def profile(request):
+    form = ProfileCreationForm()
+    if request.method == "POST":
+        form = ProfileCreationForm(request.POST)
+        if form.is_valid():
+            Profile.objects.create(
+                user=request.user,
+                image=form.cleaned_data['image'],
+                bio=form.cleaned_data['bio'],
+                gender=form.cleaned_data['gender']
+            )
+
+            return redirect('profiles:profile_detail', username=request.user.username)
+
+    return render(request, 'accounts/profile.html', {"forms": form})
 
 # def logout_user(request):
 #     logout(request)
