@@ -2,15 +2,10 @@ from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
 from django.views import View
-from django.views.generic import TemplateView
 from django.core.paginator import Paginator
 
 from apps.users.models import User
 from apps.posts.models import Post
-
-
-class MainTemplateView(LoginRequiredMixin, TemplateView):
-    template_name = 'main/index.html'
 
 
 class HomeView(LoginRequiredMixin, View):
@@ -44,5 +39,4 @@ class UserSearchView(View):
             context = {
                 'users': users_paginator,
                 }
-
         return render(request, 'main/search.html', context)

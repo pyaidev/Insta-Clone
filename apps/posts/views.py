@@ -89,7 +89,6 @@ class PostCreateView(LoginRequiredMixin, View):
                 elif mime_type.startswith('image/'):
                     media_type = MediaTypes.IMAGE
                 else:
-                    # if given file is none of image or video
                     messages.error(request, "Incorrect media type!", extra_tags='danger')
                     return render(
                         request, 'posts/new_post.html', {'post_form': post_form}
@@ -123,3 +122,7 @@ class PostLikeView(LoginRequiredMixin, View):
             messages.info(request, "You liked this post!", extra_tags='success')
 
         return redirect('posts:post-detail', post_id=post.id)
+
+
+
+
