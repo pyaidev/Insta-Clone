@@ -10,6 +10,7 @@ from django.db.models import Q
 class MainTemplateView(LoginRequiredMixin, TemplateView):
     template_name = 'main/index.html'
 
+
 class UserSearchView(View):
     def get(self, request):
         query = request.GET.get('q')
@@ -24,5 +25,4 @@ class UserSearchView(View):
             context = {
                 'users': users_paginator,
                 }
-
         return render(request, 'main/search.html', context)

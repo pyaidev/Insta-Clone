@@ -39,6 +39,10 @@
                         </button>
                     </form>
                     {% endif %}
+                    <br>
+                  {% if request.user.is_authenticated and request.user != profile.user %}
+                       <a href="" class="btn profile-edit-btn">Message</a> <br><br
+                  {% endif %}
 
 
                     <button class="btn profile-settings-btn" aria-label="profile settings"><i class="fas fa-cog"
