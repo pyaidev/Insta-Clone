@@ -1,92 +1,121 @@
-{%extends 'main/layout.html'%}
-{%load static%}
-{%block content%}
+{% extends 'main/base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+{% block content %}
+<br><br>
+<!DOCTYPE html>
+<html lang="en">
 
-    
-      <ul class="list-group">
-        {%for user in filtersObj%}
-        <li class="list-group-item search-result-item">
-          {%if user.image%}
-          <img src="{{user.image.url}}" alt="" />
-          {%else%}
-          <img src="{% static  'images/empty_user.jpg' %}" alt="" />
-          {%endif%}
-          <div>
-            <p>{{user.username}}</p>
-            <span>{{user.bio}}</span>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <script src="https://kit.fontawesome.com/fc1e235b2e.js"></script>
+  <link rel="stylesheet" href="{% static 'assets2/style.css' %}">
+  <title>Instagram Login Form</title>
+</head>
+
+<body>
+
+  <div id="wrapper">
+    <div class="container">
+      <div class="phone-app-ddemo"></div>
+      <div class="form-data">
+
+{#        <form action="" method="GET">#}
+{#            <div class="headedr__search">#}
+{#                <input type="text" placeholder="Search" name="q" value="{{ request.GET.q }}">#}
+{#                <button class="btn btn-primary" type="submit">Search</button>#}
+{##}
+{#            </div>#}
+{#        </form>#}
+
+        <form action="" method="POST" enctype="multipart/form-data">
+          <div class="logo">
+            <h3 style="padding-top: 5px; font-size: 20px;">Search Results</h3>
           </div>
-          <div class="search-result-item-btn">
-           {%if request.user.is_authenticated%}
-              {%if request.user.id in ids%}
-              <button class="follow-btn" data-id="{{user.id}}" style="color:black;" data-action="unfollow">Unfollow</button>
-              {%else%}
-              <button class="follow-btn" data-id="{{user.id}}" style="color:#0d6efd!important;" data-action="follow">Follow</button>
-              {%endif%}
-            {%else%}
-              <button class="follow-btn" data-id="{{user.id}}" style="color:#0d6efd!important;" data-action="follow">Follow</button>
-            {%endif%}
-          </div>
-        </li>
-        {%endfor%}
-      </ul>
-      
- 
 
-    <!--Script-->
-<!--    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.min.js"></script>-->
+        {% for user in users %}
+            <div class="side-menu__user-profile" style="text-align: start; border: solid rgba(192, 192, 192, 0.514) 1px; padding: 10px; border-radius: 25px;">
+                <a href="{% url 'profiles:profile_detail' user.username %}" class="side-menu__user-avatar">
+                    {% if user.profile.image.url %}
+                    <img src="{{ user.profile.image.url }}" alt="User Picture">
+                    {% else %}
+                    <img src="{% static 'assets1/default.jpg' %}" alt="User Picture">
 
-<!--    <script>-->
-<!--        var follows = document.getElementsByClassName('follow-btn')-->
+                    {% endif %}
+                </a>
+                <div class="side-menu__user-idnfo">
+                    {% if user.profile.first_name %}
+                    <a href="{% url 'profiles:profile_detail' user.username %}" style="font-size: 15px; color: black; text-align: center;">{{user.profile.first_name|title }} {{user.profile.last_name|title }}</a>
+                    {% else%}
+                    <a href="{% url 'profiles:profile_detail' user.username %}">Instagram User</a>
 
-<!--for(i = 0; i < follows.length; i++) {-->
-<!--  console.log(follows[i].innerHTML)-->
-<!-- -->
-<!--  follows[i].addEventListener('click', function(){-->
-<!--  follow_id=this.dataset.id-->
-<!--  action = this.dataset.action-->
-<!--  if(this.innerHTML=="Follow"){-->
-<!--    this.innerHTML="Unfollow"-->
-<!--    this.style.color = "black"-->
-<!--    this.dataset.action = "unfollow"-->
+                    {% endif %}
+                    <br>
+                    <span style="font-size: 14px;">@{{user.username}}</span>
+                    <br>
+                    <a href="{% url 'profiles:profile_detail' user.username %}" style="color: blue;" class="side-menu__user-button">View Profile</a>
 
-<!--  }else{-->
-<!--    this.innerHTML="Follow"-->
-<!--    this.style.color = "#0d6efd"-->
-<!--    this.dataset.action = "follow"-->
-<!--  }-->
-<!--  -->
-<!--  -->
-<!--  console.log(follow_id)-->
-<!--  user='{{request.user.id}}'-->
-<!--  followupdate(follow_id,user,action);-->
-<!--  -->
+                </div>
+            </div>
+            <!-- <hr> -->
+        {% endfor %}
 
-<!--})-->
-<!--}-->
 
-<!--function followupdate(id,user,action){-->
+        </form>
 
-<!--console.log(user + " started following  " +  follow_id)-->
-<!--var url = 'api/follow/create/'-->
+      </div>
+    </div>
 
-<!--fetch(url, {-->
-<!--method:'POST',-->
-<!--headers:{-->
-<!--  'Content-Type':'application/json',-->
-<!--  'X-CSRFToken':csrftoken,-->
-<!--},-->
-<!--body:JSON.stringify({'id':follow_id,'user':user,'action':action})-->
-<!--})-->
-<!--.then((response) => {-->
-<!--          if (!response.ok) {-->
-<!--              // error processing-->
-<!--              throw 'Error';-->
-<!--          }-->
-<!--          return response.json()-->
-<!--      })-->
-<!--.then((data) => {-->
-<!--  -->
-<!--});-->
-<!--}-->
-<!--    </script>-->
-  {%endblock%}
+    <footer>
+      <div class="container">
+        <nav class="footer-nav">
+          <ul>
+            <li>
+              <a href="#">About us</a>
+            </li>
+            <li>
+              <a href="#">Support</a>
+            </li>
+            <li>
+              <a href="#">Press</a>
+            </li>
+            <li>
+              <a href="#">Api</a>
+            </li>
+            <li>
+              <a href="#">Jobs</a>
+            </li>
+            <li>
+              <a href="#">Privacy</a>
+            </li>
+            <li>
+              <a href="#">Terms</a>
+            </li>
+            <li>
+              <a href="#">Directory</a>
+            </li>
+            <li>
+              <a href="#">Profiles</a>
+            </li>
+            <li>
+              <a href="#">Hashtags</a>
+            </li>
+            <li>
+              <a href="#">Languages</a>
+            </li>
+          </ul>
+        </nav>
+        <div class="copyright-notice">
+          &copy 2019 Instagram
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+</body>
+
+</html>
+{% endblock content %}
