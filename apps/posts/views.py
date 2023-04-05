@@ -52,8 +52,7 @@ class PostDetailView(LoginRequiredMixin, View):
             request,
             'posts/post_detail.html',
             {
-                'post': post, 'comments': comments, 'comment_form': CommentForm(),
-                'media_files': media_files, 'media_range': range(media_files.count()),
+                'post': post, 'comments': comments, 'comment_form': CommentForm(), 'media_files': media_files,
                 'is_liked': PostLike.objects.filter(post=post, user=request.user).exists()
             }
         )

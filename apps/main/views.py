@@ -1,14 +1,34 @@
+from django.db.models import Q
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import render, redirect
 from django.views import View
 from django.views.generic import TemplateView
-from apps.users.models import User
 from django.core.paginator import Paginator
-from django.db.models import Q
+
+from apps.users.models import User
+from apps.posts.models import Post
 
 
 class MainTemplateView(LoginRequiredMixin, TemplateView):
     template_name = 'main/index.html'
+
+
+class HomeView(LoginRequiredMixin, View):
+
+    def get(self, request):
+        user = request.user
+
+        posts = Post.objects.filter(
+            Q(user__profile__followed_to__followed_by__user=user) | Q(user=user)
+        ).order_by('-created_at')
+
+        return render(
+            request, 'main/index.html',
+            {
+                'post_items': posts
+            }
+        )
+
 
 class UserSearchView(View):
     def get(self, request):

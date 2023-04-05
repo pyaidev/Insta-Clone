@@ -12,3 +12,4 @@ django-crispy-forms==2.0
 crispy-bootstrap5==0.7
 pillow==9.4.0
 python-magic==0.4.27
+django_ajax==0.3.0

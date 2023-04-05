@@ -29,6 +29,10 @@ class Post(TimeStampedModel):
         comment = Comment.objects.filter(post_id=self.id).count()
         return comment
 
+    def get_media_range(self):
+        number = self.post_medias.all().count()
+        return range(number)
+
     class Meta:
         ordering = ['-created_at']
         verbose_name = _('post')

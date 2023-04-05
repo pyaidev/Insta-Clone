@@ -83,7 +83,7 @@
                                 {% else %}
                                     <div id="carouselExampleIndicators" class="carousel slide">
                                         <div class="carousel-indicators">
-                                            {% for num in media_range %}
+                                            {% for num in post.get_media_range %}
                                                 <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="{{ num }}" aria-label="Slide {{ num }}" {% if forloop.first %} aria-current="true" class="active" {% endif %} ></button>
                                             {% endfor %}
                                         </div>
