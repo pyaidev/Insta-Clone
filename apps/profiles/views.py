@@ -31,7 +31,7 @@ class ProfileDetailTemplateView(LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         profile = self.get_object()
         followers = Follower.objects.filter(followed_to=profile)
-        post = PostMedia.objects.filter(post__user__username=self.kwargs.get('username')).order_by('-created_at')
+        post = Post.objects.filter(user__username=self.kwargs.get('username')).order_by('-created_at')
         context['followers_count'] = followers.count()
         context['followers'] = followers
 
