@@ -1,0 +1,412 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+
+
+    <title>Message | Direct Message</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://netdna.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="{% static 'message.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+</head>
+</head>
+<body>
+<div class="container app">
+    <div class="row app-one">
+        <div class="col-sm-4 side">
+            <div class="side-one">
+                <div class="row heading">
+                    <div class="col-sm-3 col-xs-3 heading-avatar">
+                        <div class="heading-avatar-icon">
+                            <a href="{% url 'message:message' %}">
+                                {% if user.avatar %}
+                                    <img src="{{ user.avatar.url }}">
+                                {% else %}
+                                    <img src="{% static 'default_profile_pic.jpg' %}">
+                                {% endif %}
+                            </a>
+                        </div>
+                    </div>
+                    <div class="col-sm-3 col-xs-3 heading-avatar">
+                        <div class="heading-avatar-icon">
+                            <h4><a href="/">Instagram</a></h4>
+                        </div>
+                    </div>
+                    <div class="col-sm-1 col-xs-1  heading-dot  pull-right">
+                        <i class="fa fa-ellipsis-v fa-2x  pull-right" aria-hidden="true"></i>
+                    </div>
+                    <div class="col-sm-2 col-xs-2 heading-compose  pull-right">
+                        <i class="fa fa-comments fa-2x  pull-right" aria-hidden="true"></i>
+                    </div>
+                </div>
+                <div class="row searchBox">
+                    <div class="col-sm-12 searchBox-inner">
+                        <div class="form-group has-feedback">
+                            <input type="text" id="search-box" class="form-control" name="search"
+                                   placeholder="Search">
+                            <span class="glyphicon glyphicon-search form-control-feedback"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="row sideBar" id="search-results">
+                    {% for participant in participants %}
+                        <a href="{% url 'message:message' participant.chat.name %}">
+                            <div class="row sideBar-body" {% if partner == participant %}
+                                 style="background: lightblue;" {% endif %}>
+                                <div class="col-sm-3 col-xs-3 sideBar-avatar">
+                                    <div class="avatar-icon position-relative">
+                                        {% if participant.user.avatar %}
+                                            <img src="{{ participant.user.profile.image.url }}">
+                                        {% else %}
+                                            <img src="{{ participant.user.profile.image.url }}" alt="">
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-sm-9 col-xs-9 sideBar-main">
+                                    <div class="row">
+                                        <div class="col-sm-8 col-xs-8 sideBar-name">
+                                            <span class="name-meta">{{ participant.user.first_name }}</span><br>
+                                            <span class="name-meta" style="color: #337ab7">
+                                                {% if participant.user.is_online %}
+                                                    online
+                                                {% else %}
+                                                    {{ participant.user.last_activity }}
+                                                {% endif %}
+                                            </span>
+                                        </div>
+                                        {% if participant.chat.un_read > 0 and participant.chat.un_read_obj.first.sender.id != user.id %}
+                                            <div class="col-sm-4 col-xs-4 pull-right sideBar-time">
+                                                <span class="badge"
+                                                      style="display: unset; background-color: green">{{ participant.chat.un_read }}</span>
+                                            </div>
+                                        {% endif %}
+
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    {% endfor %}
+
+                </div>
+            </div>
+            <div class="side-two">
+                <div class="row newMessage-heading">
+                    <div class="row newMessage-main">
+                        <div class="col-sm-2 col-xs-2 newMessage-back">
+                            <i class="fa fa-arrow-left" aria-hidden="true"></i>
+                        </div>
+                        <div class="col-sm-10 col-xs-10 newMessage-title">
+                            New Chat
+                        </div>
+                    </div>
+                </div>
+                <div class="row compose-sideBar">
+                    {% for all_user in all_users %}
+                        <a href="{% url 'message:create-chat' all_user.id %}">
+                            <div class="row sideBar-body">
+                                <div class="col-sm-3 col-xs-3 sideBar-avatar">
+                                    <div class="avatar-icon">
+                                        {% if all_user.avatar %}
+                                            <img src="{{ all_user.avatar.url }}">
+                                        {% else %}
+                                            <img src="{% static 'default_profile_pic.jpg' %}" alt="">
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-sm-9 col-xs-9 sideBar-main">
+                                    <div class="row">
+                                        <div class="col-sm-8 col-xs-8 sideBar-name">
+                                            <span class="name-meta">{{ all_user.first_name }}</span>
+                                            <span class="name-meta" style="color: #337ab7">
+                                                {% if all_user.is_online %}
+                                                    online
+                                                {% else %}
+                                                    {{ all_user.last_activity }}
+                                                {% endif %}
+                                            </span>
+                                        </div>
+                                        {#                                        <div class="col-sm-4 col-xs-4 pull-right sideBar-time">#}
+                                        {#                                            <span class="time-meta pull-right">18:18</span>#}
+                                        {#                                        </div>#}
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {% if chat %}
+            <div class="col-sm-8 conversation">
+                <div class="row heading">
+                    <div class="col-sm-2 col-md-1 col-xs-3 heading-avatar">
+                        <div class="heading-avatar-icon">
+                            {% if partner.user.avatar %}
+                                <img src="{{ partner.user.avatar.url }}">
+                            {% else %}
+                                <img src="{% static 'default_profile_pic.jpg' %}" alt="">
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="col-sm-8 col-xs-7 heading-name">
+                        <a class="heading-name-meta">{{ partner.user.first_name }} </a>
+
+                        <span id="direct_user" style="color: #337ab7">
+                            {% if partner.user.is_online %}
+                                online
+                            {% else %}
+                                {{ partner.user.last_activity }}
+                            {% endif %}
+                        </span>
+                    </div>
+                    <div class="col-sm-1 col-xs-1  heading-dot pull-right">
+                        <i class="fa fa-ellipsis-v fa-2x  pull-right" aria-hidden="true"></i>
+                    </div>
+                </div>
+                <div class="row message" id="conversation">
+                    <div class="row message-previous">
+                        <div class="col-sm-12 previous">
+                            <a onclick="previous(this)" id="ankitjain28" name="20">
+                                Show Previous Message!
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="row message-body" id="chat-log">
+                        {% for message in chat.messages.all %}
+                            {% if message.sender == user %}
+                                <div class="col-sm-12 message-main-sender">
+                                    <div class="sender">
+                                        <div class="message-text">
+                                            {{ message.msg }}
+                                        </div>
+
+                                        <span class="message-time pull-right">
+                                            {{ message.created_at }}&nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-check"></i>
+                                            {% if message.is_read %}
+                                                <i class="fa fa-check"></i>{% endif %}
+                                        </span>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <div class="col-sm-12 message-main-receiver">
+                                    <div class="receiver">
+                                        <div class="message-text">
+                                            {{ message.msg }}
+                                        </div>
+                                        <span class="message-time pull-right">
+                                            {{ message.created_at }}
+                                        </span>
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+                <div class="row reply">
+                    <div class="col-sm-1 col-xs-1 reply-emojis">
+                        <i class="fa fa-smile-o fa-2x"></i>
+                    </div>
+                    <div class="col-sm-9 col-xs-9 reply-main">
+                        <textarea class="form-control" rows="1" id="chat-message-input"></textarea>
+                    </div>
+                    <div class="col-sm-1 col-xs-1 reply-recording">
+                        <i class="fa fa-microphone fa-2x" aria-hidden="true"></i>
+                    </div>
+                    <div class="col-sm-1 col-xs-1 reply-send">
+                        <i class="fa fa-send fa-2x" id="chat-message-submit" aria-hidden="true"></i>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+</div>
+<script src="https://code.jquery.com/jquery-1.10.2.min.js"></script>
+<script src="https://netdna.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script src="{% static 'message.js' %}"></script>
+<script>
+    const chatSocket = new WebSocket(
+        'ws://'
+        + window.location.host
+        + '/ws/chat/'
+        + "{{ chat.name }}"
+        + '/'
+    );
+    chatSocket.onmessage = function (e) {
+        const data = JSON.parse(e.data);
+        doom = document.querySelector('#chat-log');
+        if (data.type == 'send_message') {
+            if (data.data.user_id == {{ user.id }}) {
+                message_class = `<div class="col-sm-12 message-main-sender">
+                                        <div class="sender">
+                                            <div class="message-text">
+                                                ` + data.data.message + `
+                                            </div>
+                                            <span class="message-time pull-right">
+                                                ` + data.data.created_at + ` &nbsp;&nbsp;&nbsp;&nbsp; <i class="fa fa-check"></i>
+                                            </span>
+                                        </div>
+                                    </div>`
+            } else {
+                message_class = `<div class="col-sm-12 message-main-receiver">
+                                        <div class="receiver">
+                                            <div class="message-text">
+                                                ` + data.data.message + `
+                                            </div>
+                                            <span class="message-time pull-right">
+                                                ` + data.data.created_at + `
+                                            </span>
+                                        </div>
+                                    </div>`
+            }
+
+            var newMessage = document.createElement('div');
+
+            // set the innerHTML of the new element to the HTML code in message_class
+            newMessage.innerHTML = message_class;
+
+            // append the new element to the doom element
+            doom.appendChild(newMessage);
+        } else {
+                const span = document.getElementById('direct_user');
+
+                if (({{ chat.id }} == data.data.chat_id) && ({{ user.id }} != data.data.user_id))
+                {
+                    if (data.data.message == "typing") {
+                        span.textContent = data.data.message;
+                    } else {
+                        span.innerHTML = data.data.message;
+                    }
+                }
+        }
+
+        var conversationDiv = document.getElementById("conversation");
+        conversationDiv.scrollTop = conversationDiv.scrollHeight;
+        document.querySelector('#chat-message-input').focus();
+    };
+
+    var conversationDiv1 = document.getElementById("conversation");
+    conversationDiv1.scrollTop = conversationDiv1.scrollHeight + 30;
+
+
+    chatSocket.onclose = function (e) {
+        console.error('Chat socket closed unexpectedly');
+    };
+
+    document.querySelector('#chat-message-input').focus();
+    document.querySelector('#chat-message-input').onkeyup = function (e) {
+        if (e.keyCode === 13) {  // enter, return
+            document.querySelector('#chat-message-submit').click();
+        }
+    };
+
+    document.querySelector('#chat-message-submit').onclick = function (e) {
+        const messageInputDom = document.querySelector('#chat-message-input');
+        const message = messageInputDom.value;
+        if (message == "") {
+            alert('Enter text!')
+        } else {
+            chatSocket.send(JSON.stringify({
+                'type': 'send_message',
+                'data': {
+                    'chat_id': {{ chat.id }},
+                    'user_id': {{ user.id }},
+                    'message': message
+                }
+            }));
+            messageInputDom.value = '';
+        }
+    };
+    const input = document.getElementById('chat-message-input');
+    let timer;
+    input.addEventListener('input', () => {
+        chatSocket.send(JSON.stringify({
+            'type': 'get_typing',
+            'data': {
+                'message': '... typing',
+                'chat_id': {{ chat.id }},
+                'user_id': {{ user.id }}
+            }
+        }));
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+            chatSocket.send(JSON.stringify({
+                'type': 'get_typing',
+                'data': {
+                    'message': 'online',
+                    'chat_id': {{ chat.id }},
+                    'user_id': {{ user.id }}
+                }
+            }));
+        }, 1000); // Set the time interval to 1 second
+    });
+    const searchBox = document.getElementById('search-box');
+    const searchResults = document.getElementById('search-results');
+
+    searchBox.addEventListener('input', () => {
+        const searchTerm = searchBox.value.trim();
+        if (searchTerm.length > 0) {
+            // Send an AJAX request to the server to fetch the search results
+            const xhr = new XMLHttpRequest();
+            xhr.onreadystatechange = () => {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        // Parse the search results from the response
+                        const response = JSON.parse(xhr.responseText);
+                        console.log(response);
+                        const users = JSON.parse(response.users);
+                        console.log(users);
+                        console.log(users);
+                        // Generate the HTML for the search results
+                        const resultsHtml = users.map(user => `
+            <a href="/create_chat/${user.pk}/">
+                            <div class="row sideBar-body">
+                                <div class="col-sm-3 col-xs-3 sideBar-avatar">
+                                    <div class="avatar-icon position-relative">
+                                        {% if user.fields.avatar %}
+                                            <img src="${user.fields.avatar.url}">
+                                        {% else %}
+                                            <img src="{% static 'default-user.png' %}" alt="">
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <div class="col-sm-9 col-xs-9 sideBar-main">
+                                    <div class="row">
+                                        <div class="col-sm-8 col-xs-8 sideBar-name">
+                                            <span class="name-meta">${user.fields.first_name}</span><br>
+                                            <span class="name-meta" style="color: #337ab7">
+                                                {% if user.fields.is_online %}
+                                                    online
+                                                {% else %}
+                                                    ${user.fields.last_activity}
+                                                {% endif %}
+                                            </span>
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+          `).join('');
+                        // Add the search results to the page
+                        searchResults.innerHTML = resultsHtml;
+                    } else {
+                        // Handle errors
+                        console.error(xhr.statusText);
+                    }
+                }
+            };
+            xhr.open('GET', `/search_user?q=${searchTerm}`);
+            xhr.send();
+        } else {
+            // Clear the search results
+            location.reload();
+        }
+    });
+
+
+</script>
+</body>
+</html>

@@ -28,6 +28,7 @@ urlpatterns = [
     path('', include('apps.main.urls'), name='main'),
     path('profile/', include('apps.profiles.urls'), name='profile'),
     path('notifications/', include('apps.notification.urls')),
+    path('messages/', include('apps.message.urls'))
 ]
 
 if settings.DEBUG:

@@ -19,14 +19,15 @@ DEBUG = env('DEBUG')
 ALLOWED_HOSTS = ['*']
 
 DJANGO_APPS = [
+
+    "daphne",
     "jazzmin",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
-    "django.contrib.staticfiles",
-
+    "django.contrib.staticfiles"
 ]
 
 CUSTOM_APPS = [
@@ -35,8 +36,10 @@ CUSTOM_APPS = [
     'apps.posts',
     'apps.main',
     'apps.profiles',
-    'apps.notification'
+    'apps.notification',
+    'apps.message'
 ]
+
 THIRD_PARTY_APPS = [
     "ckeditor",
     "ckeditor_uploader",
@@ -62,6 +65,7 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'config.urls'
+
 CKEDITOR_UPLOAD_PATH = 'content/ckeditor/'
 
 TEMPLATES = [
@@ -80,7 +84,14 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'config.wsgi.application'
+# WSGI_APPLICATION = 'config.wsgi.application'
+ASGI_APPLICATION = 'config.asgi.application'
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels.layers.InMemoryChannelLayer"
+    }
+}
 
 DATABASES = {
     'default': {
@@ -92,7 +103,6 @@ DATABASES = {
         'PORT': env('DB_PORT')
     }
 }
-
 
 
 AUTH_PASSWORD_VALIDATORS = [

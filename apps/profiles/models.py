@@ -1,10 +1,6 @@
 from django.db import models
-from django.contrib.auth.models import User
 from PIL import Image
-from django.conf import settings
-
 from apps.common.models import TimeStampedModel
-from apps.posts.models import Post
 from apps.users.models import User
 from apps.profiles.choices import GENDER_CHOICES
 
@@ -15,6 +11,7 @@ class Profile(TimeStampedModel):
     image = models.ImageField(default='profile_pics/empty_user.jpg', upload_to='profile_pics/')
     bio = models.CharField(max_length=200, blank=True)
     gender = models.CharField(max_length=15, choices=GENDER_CHOICES)
+
     def __str__(self):
         return f'Profile of {self.user.email}'
 
