@@ -1,10 +1,13 @@
+from django.contrib import messages
+from django.contrib.auth import logout
+from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import JsonResponse, HttpResponseRedirect
+from django.http import JsonResponse, HttpResponseRedirect, Http404
 from django.shortcuts import render, redirect, get_object_or_404
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
-from django.views.generic import TemplateView, DetailView
+from django.views.generic import TemplateView, DetailView, UpdateView
 
 from apps.posts.models import Post, PostMedia
 from apps.profiles.models import Profile, Follower
@@ -12,19 +15,19 @@ from apps.profiles.models import Profile, Follower
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.generic import DetailView
 
-from .forms import ProfileCreationForm
+from .forms import ProfileCreationForm, EditProfileForm
 from .models import Profile, Follower
 from ..users.models import User
 
 
-class ProfileDetailTemplateView(LoginRequiredMixin, DetailView):
+class ProfileDetailView(LoginRequiredMixin, DetailView):
     model = Profile
     context_object_name = 'profile'
     template_name = 'main/profile.html'
 
     def get_object(self, queryset=None):
         username = self.kwargs.get('username')
-        profile = Profile.objects.get(user__username=username)
+        profile = get_object_or_404(Profile, user__username=username)
         return profile
 
     def get_context_data(self, **kwargs):
@@ -34,8 +37,6 @@ class ProfileDetailTemplateView(LoginRequiredMixin, DetailView):
         post = Post.objects.filter(user__username=self.kwargs.get('username')).order_by('-created_at')
         context['followers_count'] = followers.count()
         context['followers'] = followers
-
-        context['profile'] = profile
         context['posts'] = post
 
         if self.request.user.is_authenticated:
@@ -43,6 +44,34 @@ class ProfileDetailTemplateView(LoginRequiredMixin, DetailView):
             context['user_follow'] = user_follow
 
         return context
+
+
+class ProfileUpdateView(LoginRequiredMixin, UpdateView):
+    model = Profile
+    form_class = EditProfileForm
+    slug_field = 'user__username'
+    slug_url_kwarg = 'username'
+    template_name = 'main/edit_profile.html'
+    success_url = reverse_lazy('profiles:profile-detail')
+
+    def get_success_url(self):
+        return reverse_lazy('profiles:profile_detail', args=[self.request.user.username])
+
+    def get_object(self, queryset=None):
+        obj = super().get_object(queryset=queryset)
+        if obj.user != self.request.user:
+            raise Http404
+        return obj
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        return super().form_valid(form)
+
+
+def logout_user(request):
+    logout(request)
+    messages.warning(request, 'You have been logged out!')
+    return redirect('login')
 
 
 class FollowView(View):
@@ -104,5 +133,3 @@ class RemoveFollowingView(View):
     #         user_follow.delete()
     #
     #     return redirect(request.META.get('HTTP_REFERER'))
-
-
