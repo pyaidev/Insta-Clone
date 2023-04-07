@@ -23,21 +23,28 @@ class ProfileDetailTemplateView(LoginRequiredMixin, DetailView):
     template_name = 'main/profile.html'
 
     def get_object(self, queryset=None):
+        print(1)
         username = self.kwargs.get('username')
         profile = Profile.objects.get(user__username=username)
+        print(2)
         return profile
 
     def get_context_data(self, **kwargs):
+        print(3)
         context = super().get_context_data(**kwargs)
         profile = self.get_object()
+        print(4)
         followers = Follower.objects.filter(followed_to=profile)
         post = Post.objects.filter(user__username=self.kwargs.get('username')).order_by('-created_at')
+        print(5)
         context['followers_count'] = followers.count()
         context['followers'] = followers
 
+        print(6)
         context['profile'] = profile
         context['posts'] = post
 
+        print(7)
         if self.request.user.is_authenticated:
             user_follow = Follower.objects.filter(followed_by=self.request.user.profile, followed_to=profile).exists()
             context['user_follow'] = user_follow
