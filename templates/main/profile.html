@@ -38,7 +38,10 @@
 
                     <h1 class="profile-user-name">{{profile.user.username}}</h1>
                     {% if request.user.username == profile.user.username %}
-                    <a href="#" style="text-decoration:none" class="profile-btn profile-edit-btn">Edit Profile</a>
+                    <a href="{% url 'profiles:edit-profile' profile.user.username %}" style="text-decoration:none" class="profile-btn profile-edit-btn">Edit Profile</a>
+                    <button type="button" class="btn btn-info btn-lg" type="button" data-toggle="modal" data-target="#exampleModal"  style="display:inline-block; border-radius: 5px; background-color: #5bc0de; color: #fff; font-size: 16px; text-decoration: none; padding: 2px 12px;">
+                        <span class="glyphicon glyphicon-log-out"></span> Log out
+                      </button>
                     {% elif user_follow %}
                     <form action="{% url 'profiles:unfollow' profile.user.username %}" method="POST">
                         {% csrf_token %}
@@ -58,6 +61,23 @@
 
 
                 </div>
+
+                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                            <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                <h5 class="modal-title" id="exampleModalLabel" style="font-size: 24px; font-weight: bold; color: #000; margin-top: 0; margin-bottom: 1rem;">Do you want to log out?</h5>
+                                <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="position: absolute; top: 0; right: 0; padding: 1rem; color: #000; border: none; background: none; font-size: 2rem;">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                                </div>
+                                <div class="modal-footer">
+                                <button type="button" class="btn btn-secondary" style="display:inline-block; border-radius: 5px; background-color: #6c757d; color: #fff; font-size: 18px; text-decoration: none; padding: 10px 20px;"  data-dismiss="modal">No</button>
+                                <a href="{% url 'profiles:logout' %}"><button  type="button" class="btn btn-primary" style="display:inline-block; border-radius: 5px; background-color: #007bff; color: #fff; font-size: 18px; text-decoration: none; padding: 10px 20px;">Yes</button></a>
+                                </div>
+                            </div>
+                            </div>
+                        </div>
 
                 <div class="profile-stats">
 

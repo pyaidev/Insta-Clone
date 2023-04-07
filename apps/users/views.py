@@ -53,7 +53,3 @@ def profile(request):
 
     return render(request, 'accounts/profile.html', {"forms": form})
 
-# def logout_user(request):
-#     logout(request)
-#     messages.warning(request, 'You have been logged out!')
-#     return redirect('login')
