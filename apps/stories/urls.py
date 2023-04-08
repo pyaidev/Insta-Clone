@@ -1,7 +1,7 @@
 from django.urls import path
 
-from apps.stories.views import StoryTemplateView
+from apps.stories.views import CreateStoryView
 
 urlpatterns = [
-    path('', StoryTemplateView.as_view(), name='story')
+    path('create/', CreateStoryView.as_view(), name='create_story')
 ]

@@ -37,7 +37,8 @@ CUSTOM_APPS = [
     'apps.main',
     'apps.profiles',
     'apps.notification',
-    'apps.message'
+    'apps.message',
+    'apps.stories'
 ]
 
 THIRD_PARTY_APPS = [
