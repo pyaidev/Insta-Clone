@@ -35,6 +35,9 @@ class Post(TimeStampedModel):
         number = self.post_medias.all().count()
         return range(number)
 
+    def is_liked(self, user_id):
+        return self.likes.filter(user_id=user_id).exists()
+
     class Meta:
         ordering = ['-created_at']
         verbose_name = _('post')

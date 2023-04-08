@@ -19,6 +19,7 @@ class PostDetailView(LoginRequiredMixin, View):
         comments = post.comments.all()
 
         media_files = post.post_medias.all()
+        print(post.is_liked(request.user.id))
 
         return render(
             request,
@@ -26,7 +27,7 @@ class PostDetailView(LoginRequiredMixin, View):
             {
                 'post': post, 'comments': comments, 'comment_form': CommentForm(),
                 'media_files': media_files, 'media_range': range(media_files.count()),
-                'is_liked': PostLike.objects.filter(post=post, user=request.user).exists()
+                'is_liked': post.is_liked(request.user.id)
             }
         )
 
@@ -115,14 +116,10 @@ class PostLikeView(LoginRequiredMixin, View):
         if like.exists():
             # if post is already liked by this user
             like.delete()
-            messages.info(request, "You unliked this post!", extra_tags='warning')
+            # messages.info(request, "You unliked this post!", extra_tags='warning')
         else:
             # if post is not liked yet by this user
             PostLike.objects.create(user=user, post=post)
-            messages.info(request, "You liked this post!", extra_tags='success')
+            # messages.info(request, "You liked this post!", extra_tags='success')
 
-        return redirect('posts:post-detail', post_id=post.id)
-
-
-
-
+        return redirect(request.META.get('HTTP_REFERER'))
