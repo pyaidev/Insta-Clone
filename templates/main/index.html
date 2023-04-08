@@ -220,11 +220,12 @@
                                 <span>@{{profile.user.username}}</span>
                             </div>
 
-                            {% if follow_status == True %}
-                                <a href="{% url 'profiles:follow' profile.user.username %}" class="side-menu__suggestion-button">Follow</a>
-                            {% else %}
-                                <a href="{% url 'profiles:follow' profile.user.username %}" class="side-menu__suggestion-button">Follow</a>
-                            {% endif %}
+                            <form action="{% url 'profiles:follow' profile.user.username %}" method="POST">
+                                {% csrf_token %}
+                                <button class="side-menu__suggestion-button">
+                                    Follow
+                                </button>
+                            </form>
                         </div>
                     {% endfor %}
 
@@ -257,30 +258,27 @@
                     <button>See All</button>
                 </div>
                 <div class="side-menu__suggestions-content">
-                    {% for user in all_users %}
-                    {% if request.user.username != user.username %}
-                    <div class="side-menu__suggestion">
-                        <a href="{% url 'profile' user %}" class="side-menu__suggestion-avatar">
-                            <img src="{{user.profile.image.url}}" alt="User Picture">
-                        </a>
+                    {% for profile in suggestion_profiles %}
+                        <div class="side-menu__suggestion">
+                            <a href="{% url 'profiles:profile_detail' profile.user.username %}" class="side-menu__suggestion-avatar">
+                                <img src="{{profile.image.url}}" alt="User Picture">
+                            </a>
 
-                        <div class="side-menu__suggestion-info">
-                            {% if user.profile.first_name %}
-                            <a href="{% url 'profile' user %}">{{user.profile.first_name|title}}
-                                {{user.profile.last_name|title}}</a>
-                            {% else %}
-                            <a href="{% url 'profile' user %}">{{user.username}}</a>
-                            {% endif %}
-                            <span>@{{user.username}}</span>
+                            <div class="side-menu__suggestion-info">
+                                {% if profile.user.first_name %}
+                                <a href="{% url 'profiles:profile_detail' profile.user.username %}">{{profile.user.first_name|title}}
+                                    {{profile.user.last_name|title}}</a>
+                                {% endif %}
+                                <span>@{{profile.user.username}}</span>
+                            </div>
+
+                            <form action="{% url 'profiles:follow' profile.user.username %}" method="POST">
+                                {% csrf_token %}
+                                <button class="side-menu__suggestion-button">
+                                    Follow
+                                </button>
+                            </form>
                         </div>
-
-                        {% if follow_status == True %}
-                        <a href="{% url 'follow' user 0 %}" class="side-menu__suggestion-button">Follow</a>
-                        {% else %}
-                        <a href="{% url 'follow' user 1 %}" class="side-menu__suggestion-button">Follow</a>
-                        {% endif %}
-                    </div>
-                    {% endif %}
                     {% endfor %}
 
                 </div>

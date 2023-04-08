@@ -4,7 +4,7 @@ from apps.users.models import User
 from apps.profiles.models import Profile
 
 
-def get_main_suggestions(user_id):
+def get_main_profile_suggestions(user_id, number):
     user_profile = User.objects.get(id=user_id).profile
 
     suggestion_profiles = Profile.objects.filter(
@@ -15,10 +15,10 @@ def get_main_suggestions(user_id):
     )
 
     count = suggestion_profiles.count()
-    if count < 30:
+    if count < number:
         new_profiles = Profile.objects.exclude(
             Q(user_id=user_id) | Q(followers__followed_by=user_profile)
-        ).order_by('-created_at')[:(30-count)]
+        ).order_by('-created_at')[:(number-count)]
         suggestion_profiles = suggestion_profiles | new_profiles
 
-    return suggestion_profiles.distinct()
+    return suggestion_profiles.distinct()[:number]

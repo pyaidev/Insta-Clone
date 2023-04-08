@@ -1,10 +1,7 @@
 from django.db import models
-from django.contrib.auth.models import User
 from PIL import Image
-from django.conf import settings
 
 from apps.common.models import TimeStampedModel
-from apps.posts.models import Post
 from apps.users.models import User
 from apps.profiles.choices import GENDER_CHOICES
 

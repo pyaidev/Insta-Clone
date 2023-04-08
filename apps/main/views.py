@@ -6,7 +6,7 @@ from django.core.paginator import Paginator
 
 from apps.users.models import User
 from apps.posts.models import Post, PostLike
-from apps.common.services.suggestions import get_main_suggestions
+from apps.common.services.suggestions import get_main_profile_suggestions
 
 
 class HomeView(LoginRequiredMixin, View):
@@ -19,7 +19,7 @@ class HomeView(LoginRequiredMixin, View):
         ).order_by('-created_at')
 
         like_indexes = PostLike.objects.filter(user=user).values_list('post__id', flat=True)
-        suggestion_profiles = get_main_suggestions(user.id)
+        suggestion_profiles = get_main_profile_suggestions(user.id, 5)
 
         return render(
             request, 'main/index.html',
