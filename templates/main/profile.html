@@ -57,7 +57,7 @@
                     <br>
                     {% if request.user.is_authenticated and request.user != profile.user %}
                     <a href="" class="btn profile-edit-btn">Message</a> <br><br
-                        {% endif %}
+                     {% endif %}
 
 
                 </div>
@@ -83,7 +83,8 @@
 
                     <ul>
                         <li><span class="profile-stat-count">{{ profile.post_count }}</span> posts</li>
-                        <li data-bs-toggle="modal" data-bs-target="#Followers"><span class="profile-stat-count">{{ followers_count }} </span>
+
+                        <li data-bs-toggle="modal"  data-bs-target="#Followers"><span class="profile-stat-count">{{ followers_count }} </span>
                             followers
                         </li>
                         <li data-bs-toggle="modal" data-bs-target="#Followings"><span class="profile-stat-count">{{ profile.followed_by.count }}</span>
@@ -99,6 +100,7 @@
                     <p>{{ profile.bio }}</p>
 
                 </div>
+
             </div>
 
 
@@ -212,52 +214,51 @@
     </div>
 </div>
 
-<!--#TODO end this task-->
-<!--<div class="modal fade" id="Followings" tabindex="-1" aria-labelledby="FollowingLabel" aria-hidden="true">-->
-<!--    <div class="modal-dialog modal-dialog-centered">-->
-<!--        <div class="modal-content">-->
-<!--            <div class="modal-header">-->
-<!--                <h1 class="modal-title fs-5" id="FollowingsLabel">Followers</h1>-->
-<!--                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
-<!--            </div>-->
-<!--            <div class="modal-body">-->
-<!--                <div class="side-menu__suggestions-section">-->
+<div class="modal fade" id="Followings" tabindex="-1" aria-labelledby="FollowingLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="FollowingsLabel">Followers</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="side-menu__suggestions-section">
 
-<!--                    <div class="side-menu__suggestions-content">-->
-<!--                        {% for follower in followers %}-->
-<!--                        <div class="side-menu__suggestion">-->
-<!--                            <a href="{% url 'profiles:profile_detail' follower.followed_by.user.username %}"-->
-<!--                               class="side-menu__suggestion-avatar">-->
-<!--                                {% if follower.followed_by.image %}-->
-<!--                                <img src="{{ follower.followed_by.image.url }}" alt="User Picture">-->
-<!--                                {% else %}-->
-<!--                                <img src="{% static 'images/empty-user.png' %}" alt="User Picture">-->
-<!--                                {% endif %}-->
-<!--                            </a>-->
+                    <div class="side-menu__suggestions-content">
+                        {% for follower in followers %}
+                        <div class="side-menu__suggestion">
+                            <a href="{% url 'profiles:profile_detail' follower.followed_by.user.username %}"
+                               class="side-menu__suggestion-avatar">
+                                {% if follower.followed_by.image %}
+                                <img src="{{ follower.followed_by.image.url }}" alt="User Picture">
+                                {% else %}
+                                <img src="{% static 'images/empty-user.png' %}" alt="User Picture">
+                                {% endif %}
+                            </a>
 
-<!--                            <div class="side-menu__suggestion-info">-->
-<!--                                <a href="{% url 'profiles:profile_detail' follower.followed_by.user.username %}">-->
-<!--                                    {{ follower.followed_by.user.username }}</a>-->
-<!--                                <a href="{% url 'profiles:profile_detail' follower.followed_by.user.username %}"><span>@{{ follower.followed_by.user.username }}</span></a>-->
-<!--                            </div>-->
-<!--                            {% if request.user.username == profile.user.username %}-->
-<!--                            <form action="{% url 'profiles:remove_follower' follower.followed_by.user.username %}" method="POST">-->
-<!--                                {% csrf_token %}-->
-<!--                                <button class="btn profile-edit-btn">Remove</button>-->
-<!--                            </form>-->
-<!--                            {% endif %}-->
-<!--                        </div>-->
-<!--                        {% endfor %}-->
+                            <div class="side-menu__suggestion-info">
+                                <a href="{% url 'profiles:profile_detail' follower.followed_by.user.username %}">
+                                    {{ follower.followed_by.user.username }}</a>
+                                <a href="{% url 'profiles:profile_detail' follower.followed_by.user.username %}"><span>@{{ follower.followed_by.user.username }}</span></a>
+                            </div>
+                            {% if request.user.username == profile.user.username %}
+                            <form action="{% url 'profiles:remove_follower' follower.followed_by.user.username %}" method="POST">
+                                {% csrf_token %}
+                                <button class="btn profile-edit-btn">Remove</button>
+                            </form>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
 
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--            <div class="modal-footer">-->
-<!--                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>-->
-<!--            </div>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</div>-->
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <style>
