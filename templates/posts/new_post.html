@@ -27,9 +27,10 @@
             <h3 style="padding: 20px; font-size: 20px;">Create New Post</h3>
           </div>
 <!--		   {{post_form|crispy}}-->
+          {{post_form.media_files}} <br>
           {{post_form.text}} <br>
           <h5 class="text-start">Allow commentary: </h5> {{post_form.allow_commentary}} <br>
-          {{post_form.media_files}} <br>
+
           <button class="form-btn" type="submit">Post</button>
         </form>
         

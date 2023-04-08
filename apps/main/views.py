@@ -4,9 +4,9 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from django.core.paginator import Paginator
 
-from apps.profiles.models import Profile, Follower
 from apps.users.models import User
-from apps.posts.models import Post
+from apps.posts.models import Post, PostLike
+from apps.common.services.suggestions import get_main_profile_suggestions
 
 
 class HomeView(LoginRequiredMixin, View):
@@ -15,18 +15,18 @@ class HomeView(LoginRequiredMixin, View):
         user = request.user
 
         posts = Post.objects.filter(
-            Q(user__profile__followed_to__followed_by__user=user) | Q(user=user)
+            Q(user__profile__followers__followed_by__user=user) | Q(user=user)
         ).order_by('-created_at')
 
-        profile = get_object_or_404(Profile, user=user)
-        followed_profiles = Follower.objects.filter(followed_by=profile).values_list('followed_to__user', flat=True)
-        unfollow_users = User.objects.exclude(id=user.id).exclude(id__in=followed_profiles)
+        like_indexes = PostLike.objects.filter(user=user).values_list('post__id', flat=True)
+        suggestion_profiles = get_main_profile_suggestions(user.id, 5)
 
         return render(
             request, 'main/index.html',
             {
                 'post_items': posts,
-                'unfollow_users': unfollow_users
+                'like_indexes': list(like_indexes),
+                'suggestion_profiles': suggestion_profiles,
             }
         )
 

@@ -2,14 +2,17 @@ from django.shortcuts import render, redirect
 from .models import Notification
 
 
+
 def ShowNotification(request):
-    user = request.user
-    notifications = Notification.objects.filter(user=user).order_by('-date')
+    notifications = Notification.objects.all()
+    print(notifications[0].post.post_medias.all()[0].file.url)
+
 
     context = {
         'notifications': notifications,
 
     }
+    print(context)
     return render(request, 'notification/notification.html', context)
 
 

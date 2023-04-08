@@ -1,10 +1,13 @@
 from django.db import models
-from django.contrib.auth.models import User
 from PIL import Image
-from django.conf import settings
+
+from django.db.models.signals import post_save, post_delete
 
 from apps.common.models import TimeStampedModel
-from apps.posts.models import Post
+from apps.notification.models import Notification
+
+
+from apps.common.models import TimeStampedModel
 from apps.users.models import User
 from apps.profiles.choices import GENDER_CHOICES
 
@@ -15,6 +18,7 @@ class Profile(TimeStampedModel):
     image = models.ImageField(default='profile_pics/empty_user.jpg', upload_to='profile_pics/')
     bio = models.CharField(max_length=200, blank=True)
     gender = models.CharField(max_length=15, choices=GENDER_CHOICES)
+
     def __str__(self):
         return f'Profile of {self.user.email}'
 
@@ -41,10 +45,10 @@ class Profile(TimeStampedModel):
 
 class Follower(models.Model):
     followed_to = models.ForeignKey(
-        Profile, on_delete=models.CASCADE, related_name='followed_to')
+        Profile, on_delete=models.CASCADE, related_name='followers', null=True)
     followed_by = models.ForeignKey(
-        Profile, on_delete=models.CASCADE, related_name='followed_by')
+        Profile, on_delete=models.CASCADE, related_name='followings', null=True)
 
     def __str__(self):
-        return f"{str(self.followed_by)}"
+        return f"from {self.followed_by.user} to {self.followed_to.user}"
 

@@ -116,22 +116,24 @@
                         </div>
                         <!-- /Post Media Content-->
 
-
                         <div class="post__footer">
                             <div class="post__buttons">
-
-<!--                                <a href="{% url 'main'%}" class="post__button">-->
-                                <a href="{%url 'posts:post-like' post.id %}" class="post__button" style="color: black">
+                                <a href="{%url 'posts:post-like' post.id %}" class="post__button">
                                 {% if is_liked %}
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-heart-fill" viewBox="0 0 16 16">
-                                        <path fill-rule="evenodd" d="M8 1.314C12.438-3.248 23.534 4.735 8 15-7.534 4.736 3.562-3.248 8 1.314z"/>
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M12 20.9989C11.9753 20.9989 11.9506 20.9983 11.926 20.9983C9.58231 20.9983 0.999969 14.3277 0.999969 7.06394C0.999969 3.94723 2.92747 1.16734 6.05113 1.16734C8.11967 1.16734 10.0284 2.24489 11.926 4.09183C13.8235 2.24489 15.7322 1.16734 17.8008 1.16734C20.9245 1.16734 22.852 3.94723 22.852 7.06394C22.852 14.3277 14.2697 20.9983 11.926 20.9983C11.9014 20.9983 11.8767 20.9989 11.852 20.9989H12Z"
+                                            fill="#F44336" />
                                     </svg>
                                 {% else %}
-                                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-heart" viewBox="0 0 16 16">
-                                        <path d="m8 2.748-.717-.737C5.6.281 2.514.878 1.4 3.053c-.523 1.023-.641 2.5.314 4.385.92 1.815 2.834 3.989 6.286 6.357 3.452-2.368 5.365-4.542 6.286-6.357.955-1.886.838-3.362.314-4.385C13.486.878 10.4.28 8.717 2.01L8 2.748zM8 15C-7.333 4.868 3.279-3.04 7.824 1.143c.06.055.119.112.176.171a3.12 3.12 0 0 1 .176-.17C12.72-3.042 23.333 4.867 8 15z"/>
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                        xmlns="http://www.w3.org/2000/svg">
+                                        <path
+                                            d="M11.4995 21.2609C11.1062 21.2609 10.7307 21.1362 10.4133 20.9001C8.2588 19.3012 3.10938 15.3239 1.81755 12.9143C0.127895 9.76543 1.14258 5.72131 4.07489 3.89968C5.02253 3.31177 6.09533 3 7.18601 3C8.81755 3 10.3508 3.66808 11.4995 4.85726C12.6483 3.66808 14.1815 3 15.8131 3C16.9038 3 17.9766 3.31177 18.9242 3.89968C21.8565 5.72131 22.8712 9.76543 21.186 12.9143C19.8942 15.3239 14.7448 19.3012 12.5902 20.9001C12.2684 21.1362 11.8929 21.2609 11.4995 21.2609ZM7.18601 4.33616C6.34565 4.33616 5.5187 4.57667 4.78562 5.03096C2.43888 6.49183 1.63428 9.74316 2.99763 12.2819C4.19558 14.5177 9.58639 18.6242 11.209 19.8267C11.3789 19.9514 11.6158 19.9514 11.7856 19.8267C13.4082 18.6197 18.799 14.5133 19.997 12.2819C21.3603 9.74316 20.5557 6.48738 18.209 5.03096C17.4804 4.57667 16.6534 4.33616 15.8131 4.33616C14.3425 4.33616 12.9657 5.04878 12.0359 6.28696L11.4995 7.00848L10.9631 6.28696C10.0334 5.04878 8.6611 4.33616 7.18601 4.33616Z"
+                                            fill="var(--text-dark)" stroke="var(--text-dark)" stroke-width="0.6" />
                                     </svg>
                                 {% endif %}
-
                                 </a>
                                 <button class="post__button">
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -192,26 +194,30 @@
                                                     </div>
                                                 </form>
 
-                                                
-                                                {% for comment in comments %}
-                                                    <div class="bg-white p-2">
-                                                        <div class="d-flex flex-row user-info">
-                                                            <img class="rounded-circle" src="{{comment.user.profile.image.url}}" width="30" height="30">
-                                                            <a href="" style="text-decoration: none;">
-                                                                <div class="d-flex flex-column justify-content-start ml-2">
-                                                                    <span class="d-block font-weight-bold name">
-                                                                        {{comment.user.profile.first_name}} {{comment.user.profile.last_name}}
-                                                                    </span>
-                                                                    <span class="date text-black-50 ms-2 pt-2"> {{comment.created_at}}
-                                                                    </span>
-                                                                </div>
-                                                            </a>
+
+                                                {% if comments %}
+                                                    <h2 id="comments">Comments</h2>
+                                                    {% for comment in comments %}
+                                                        <div class="bg-white p-2">
+                                                            <div class="d-flex flex-row user-info">
+                                                                <img class="rounded-circle" src="{{comment.user.profile.image.url}}" width="30" height="30">
+                                                                <a href="" style="text-decoration: none;">
+                                                                    <div class="d-flex flex-column justify-content-start ml-2">
+                                                                        <span class="d-block font-weight-bold name">
+                                                                            {{comment.user.profile.first_name}} {{comment.user.profile.last_name}}
+                                                                        </span>
+                                                                        <span class="date text-black-50 ms-2 pt-2"> {{comment.created_at}}
+                                                                        </span>
+                                                                    </div>
+                                                                </a>
+                                                            </div>
+                                                            <div class="mt-2">
+                                                                <p class="comment-text">{{ comment.text }}</p>
+                                                            </div>
                                                         </div>
-                                                        <div class="mt-2">
-                                                            <p class="comment-text">{{ comment.text }}</p>
-                                                        </div>
-                                                    </div>
-                                                {% endfor %}
+                                                    {% endfor %}
+                                                {% endif %}
+
 
 
                                             </div>

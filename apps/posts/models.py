@@ -3,7 +3,9 @@ from django.utils.translation import gettext_lazy as _
 from ckeditor.fields import RichTextField
 
 from apps.common.models import TimeStampedModel, Tag
+from apps.notification.models import Notification
 from apps.users.models import User
+from django.db.models.signals import post_save, post_delete
 from apps.posts.choices import MediaTypes
 
 
@@ -32,6 +34,9 @@ class Post(TimeStampedModel):
     def get_media_range(self):
         number = self.post_medias.all().count()
         return range(number)
+
+    def is_liked(self, user_id):
+        return self.likes.filter(user_id=user_id).exists()
 
     class Meta:
         ordering = ['-created_at']
@@ -69,6 +74,21 @@ class Comment(TimeStampedModel):
     parent = models.ForeignKey('self', models.SET_NULL, null=True, blank=True, related_name='replies')
     text = RichTextField()
 
+    def user_comment_post(sender, instance, *args, **kwargs):
+        comment = instance
+        post = comment.post
+        text_preview = comment.text[:20]
+        sender = comment.user
+        notify = Notification(post=post, sender=sender, user=post.user, text_preview=text_preview, notification_types=2)
+        notify.save()
+
+    def user_del_comment_post(sender, instance, *args, **kwargs):
+        like = instance
+        post = like.post
+        sender = like.user
+
+        notify = Notification.objects.filter(post=post, sender=sender, notification_type=2)
+        notify.delete()
     def __str__(self):
         return f"{self.text[:20]}..."
 
@@ -77,10 +97,30 @@ class Comment(TimeStampedModel):
         verbose_name = _('comment')
         verbose_name_plural = _('comments')
 
+post_save.connect(Comment.user_comment_post, sender=Comment)
+post_delete.connect(Comment.user_del_comment_post, sender=Comment)
+
 
 class PostLike(TimeStampedModel):
     user = models.ForeignKey('users.User', models.CASCADE, related_name='likes')
     post = models.ForeignKey('posts.Post', models.CASCADE, related_name='likes')
+
+    def user_liked_post(sender, instance, *args, **kwargs):
+        like = instance
+        post = like.post
+        sender = like.user
+        notify = Notification(post=post, sender=sender, user=post.user, notification_types=1)
+        notify.save()
+
+    def user_unlike_post(sender, instance, *args, **kwargs):
+        like = instance
+        post = like.post
+        sender = like.user
+
+        notify = Notification.objects.filter(post=post, sender=sender, notification_types=1)
+        notify.delete()
+
+
 
     def __str__(self):
         return f"{self.user} | {self.post}"
@@ -88,3 +128,5 @@ class PostLike(TimeStampedModel):
     class Meta:
         verbose_name = 'Like'
         verbose_name_plural = 'Likes'
+post_save.connect(PostLike.user_liked_post, sender=PostLike)
+post_delete.connect(PostLike.user_unlike_post, sender=PostLike)

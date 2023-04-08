@@ -29,6 +29,7 @@ urlpatterns = [
     path('profile/', include('apps.profiles.urls'), name='profile'),
     path('notifications/', include('apps.notification.urls')),
     path('story/',include('apps.stories.urls'))
+    path('messages/', include('apps.message.urls'))
 ]
 
 if settings.DEBUG:
