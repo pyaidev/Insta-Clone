@@ -15,6 +15,7 @@ class Profile(TimeStampedModel):
     image = models.ImageField(default='profile_pics/empty_user.jpg', upload_to='profile_pics/')
     bio = models.CharField(max_length=200, blank=True)
     gender = models.CharField(max_length=15, choices=GENDER_CHOICES)
+
     def __str__(self):
         return f'Profile of {self.user.email}'
 
@@ -41,12 +42,11 @@ class Profile(TimeStampedModel):
 
 class Follower(models.Model):
     followed_to = models.ForeignKey(
-        Profile, on_delete=models.CASCADE, related_name='followings'
+        Profile, on_delete=models.CASCADE, related_name='followers'
     )
     followed_by = models.ForeignKey(
-        Profile, on_delete=models.CASCADE, related_name='followers'
+        Profile, on_delete=models.CASCADE, related_name='followings'
     )
 
     def __str__(self):
-        return f"{str(self.followed_by)}"
-
+        return f"from {self.followed_by.user} to {self.followed_to.user}"

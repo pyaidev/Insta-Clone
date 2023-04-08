@@ -118,7 +118,7 @@
 
                         <div class="post__footer">
                             <div class="post__buttons">
-                                <a href="{%url 'posts:post-like' post.id %}?redirect_to=post_detail" class="post__button">
+                                <a href="{%url 'posts:post-like' post.id %}" class="post__button">
                                 {% if is_liked %}
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                                         xmlns="http://www.w3.org/2000/svg">

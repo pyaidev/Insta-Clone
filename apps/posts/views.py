@@ -110,7 +110,6 @@ class PostLikeView(LoginRequiredMixin, View):
     def get(self, request, post_id):
         post = get_object_or_404(Post, id=post_id)
         user = request.user
-        redirect_to = request.GET.get('redirect_to', 'post_detail')
 
         like = PostLike.objects.filter(user=user, post=post)
 
@@ -123,12 +122,4 @@ class PostLikeView(LoginRequiredMixin, View):
             PostLike.objects.create(user=user, post=post)
             # messages.info(request, "You liked this post!", extra_tags='success')
 
-        if redirect_to == 'home':
-            return redirect('main')
-
-        # redirect to post detail page
-        return redirect('posts:post-detail', post_id=post.id)
-
-
-
-
+        return redirect(request.META.get('HTTP_REFERER'))

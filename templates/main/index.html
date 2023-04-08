@@ -125,7 +125,7 @@
 
                     <div class="post__footer">
                         <div class="post__buttons">
-                            <a href="{% url 'posts:post-like' post.id %}?redirect_to=home" class="post__button">
+                            <a href="{% url 'posts:post-like' post.id %}" class="post__button">
                                 {% if post.id in like_indexes %}
                                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                                             xmlns="http://www.w3.org/2000/svg">
@@ -206,30 +206,26 @@
                         <button>See All</button>
                     </div>
 
-                    {% for user in all_users %}
-                    {% if request.user.username != user.username %}
-                    <div class="side-menu__suggestion">
-                        <a href="{% url 'profile' user %}" class="side-menu__suggestion-avatar">
-                            <img src="{{user.profile.image.url}}" alt="User Picture">
-                        </a>
+                    {% for profile in suggestion_profiles %}
+                        <div class="side-menu__suggestion">
+                            <a href="{% url 'profiles:profile_detail' profile.user.username %}" class="side-menu__suggestion-avatar">
+                                <img src="{{ profile.image.url }}" alt="User Picture">
+                            </a>
 
-                        <div class="side-menu__suggestion-info">
-                            {% if user.profile.first_name %}
-                            <a href="{% url 'profile' user %}">{{user.profile.first_name|title}}
-                                {{user.profile.last_name|title}}</a>
+                            <div class="side-menu__suggestion-info">
+                                {% if profile.user.first_name %}
+                                    <a href="{% url 'profiles:profile_detail' profile.user.username %}">{{profile.user.first_name|title}}
+                                        {{profile.user.last_name|title}}</a>
+                                {% endif %}
+                                <span>@{{profile.user.username}}</span>
+                            </div>
+
+                            {% if follow_status == True %}
+                                <a href="{% url 'profiles:follow' profile.user.username %}" class="side-menu__suggestion-button">Follow</a>
                             {% else %}
-                            <a href="{% url 'profile' user %}">{{user.username}}</a>
+                                <a href="{% url 'profiles:follow' profile.user.username %}" class="side-menu__suggestion-button">Follow</a>
                             {% endif %}
-                            <span>@{{user.username}}</span>
                         </div>
-
-                        {% if follow_status == True %}
-                        <a href="{% url 'follow' user 0 %}" class="side-menu__suggestion-button">Follow</a>
-                        {% else %}
-                        <a href="{% url 'follow' user 1 %}" class="side-menu__suggestion-button">Follow</a>
-                        {% endif %}
-                    </div>
-                    {% endif %}
                     {% endfor %}
 
                 </div>
