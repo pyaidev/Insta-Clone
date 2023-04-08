@@ -1,9 +1,8 @@
-
-
 from django.db import models
 from apps.users.models import User
 from apps.common.models import TimeStampedModel
 from django.utils.crypto import get_random_string
+
 
 
 
@@ -55,4 +54,3 @@ class Message(TimeStampedModel):
     class Meta:
         verbose_name = "Message"
         verbose_name_plural = "Messages"
-        # ordering = ['-created_at']

@@ -21,10 +21,10 @@
                     <div class="col-sm-3 col-xs-3 heading-avatar">
                         <div class="heading-avatar-icon">
                             <a href="{% url 'message:message' %}">
-                                {% if user.avatar %}
-                                    <img src="{{ user.avatar.url }}">
+                                {% if user.profile.image %}
+                                    <img src="{{ user.profile.image.url }}">
                                 {% else %}
-                                    <img src="{% static 'default_profile_pic.jpg' %}">
+                                    <img src="{% static 'images/empty_user.jpg' %}">
                                 {% endif %}
                             </a>
                         </div>
@@ -51,16 +51,18 @@
                     </div>
                 </div>
                 <div class="row sideBar" id="search-results">
+
                     {% for participant in participants %}
+
                         <a href="{% url 'message:message' participant.chat.name %}">
                             <div class="row sideBar-body" {% if partner == participant %}
                                  style="background: lightblue;" {% endif %}>
                                 <div class="col-sm-3 col-xs-3 sideBar-avatar">
                                     <div class="avatar-icon position-relative">
-                                        {% if participant.user.avatar %}
+                                        {% if participant.user.profile.image %}
                                             <img src="{{ participant.user.profile.image.url }}">
                                         {% else %}
-                                            <img src="{{ participant.user.profile.image.url }}" alt="">
+                                            <img src="{% static 'images/empty_user.jpg' %}" alt="Photo">
                                         {% endif %}
                                     </div>
                                 </div>
@@ -108,10 +110,10 @@
                             <div class="row sideBar-body">
                                 <div class="col-sm-3 col-xs-3 sideBar-avatar">
                                     <div class="avatar-icon">
-                                        {% if all_user.avatar %}
-                                            <img src="{{ all_user.avatar.url }}">
+                                        {% if all_user.profile.image %}
+                                            <img src="{{ all_user.profile.image.url }}">
                                         {% else %}
-                                            <img src="{% static 'default_profile_pic.jpg' %}" alt="">
+                                            <img src="{% static 'images/empty_user.jpg' %}" alt="efewewfwe">
                                         {% endif %}
                                     </div>
                                 </div>
@@ -143,10 +145,10 @@
                 <div class="row heading">
                     <div class="col-sm-2 col-md-1 col-xs-3 heading-avatar">
                         <div class="heading-avatar-icon">
-                            {% if partner.user.avatar %}
-                                <img src="{{ partner.user.avatar.url }}">
+                            {% if partner.profile.image %}
+                                <img src="{{ partner.profile.image.url }}" alt="ewfewegweg">
                             {% else %}
-                                <img src="{% static 'default_profile_pic.jpg' %}" alt="">
+                                <img src="{% static 'images/empty_user.jpg' %}" alt="">
                             {% endif %}
                         </div>
                     </div>
@@ -234,6 +236,7 @@
         + "{{ chat.name }}"
         + '/'
     );
+    console.log(chatSocket);
     chatSocket.onmessage = function (e) {
         const data = JSON.parse(e.data);
         doom = document.querySelector('#chat-log');
@@ -365,8 +368,8 @@
                             <div class="row sideBar-body">
                                 <div class="col-sm-3 col-xs-3 sideBar-avatar">
                                     <div class="avatar-icon position-relative">
-                                        {% if user.fields.avatar %}
-                                            <img src="${user.fields.avatar.url}">
+                                        {% if user.image %}
+                                            <img src="${user.image.url}">
                                         {% else %}
                                             <img src="{% static 'default-user.png' %}" alt="">
                                         {% endif %}
@@ -375,7 +378,7 @@
                                 <div class="col-sm-9 col-xs-9 sideBar-main">
                                     <div class="row">
                                         <div class="col-sm-8 col-xs-8 sideBar-name">
-                                            <span class="name-meta">${user.fields.first_name}</span><br>
+                                            <span class="name-meta">${user.first_name}</span><br>
                                             <span class="name-meta" style="color: #337ab7">
                                                 {% if user.fields.is_online %}
                                                     online

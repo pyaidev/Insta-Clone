@@ -21,8 +21,8 @@
     <div class="container">
       <div class="phone-app-ddemo"></div>
       <div class="form-data">
-        
-    
+
+
 
         <form action="" method="POST" enctype="multipart/form-data">
           <div class="logo">
@@ -54,7 +54,7 @@
                         <a href="{% url 'delete-notification' notification.id %}" type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></a>
                       </div>
                 {% endif %}
-                
+
                 {% if notification.notification_type == 3 %}
                     <div class="alert alert-white alert-dismissible fade show" role="alert" style="border: 1px rgba(219, 219, 219, 0.699) solid; border-radius: 25px;">
                         <div class="side-menu__user-profile">
@@ -80,21 +80,21 @@
                 <div class="alert alert-white alert-dismissible fade show" role="alert" style="border: 1px rgba(219, 219, 219, 0.699) solid; border-radius: 25px;">
                   <div class="side-menu__user-profile">
 
-                    <a href="{% url 'profile' user.username %}" class="side-menu__user-avatar">
+                    <a href="{% url 'profiles:profile_detail' user.username %}" class="side-menu__user-avatar">
                       {% if notification.sender.profile.image %}
                           <img src="{{ notification.sender.profile.image.url }}" alt="User Picture">
                       {% else %}
                           <img src="{% static 'assets1/default.jpg' %}" alt="User Picture">
                       {% endif %}
                     </a>
-                     
+
                       <div class="side-menu__user-idnfo" style="text-align: start;">
-                        <a href="{% url 'profile' user.username %}" style="font-size: 15px; color: black; text-align: center;">{{ notification.sender.profile.first_name|title }} {{ notification.sender.profile.last_name|title }}</a> <br>
-                        <a href="{% url 'profile' user.username %}" style="font-size: 15px; color: black; text-align: center;"><b><i class="bi bi-chat-dots-fill" style="color: rgb(252, 122, 1);"></i> Commented on your post</b></a> <br>
-                        <a href="{% url 'profile' user.username %}" style="font-size: 10px; color: rgb(75, 75, 75); ">{{ notification.date }}</a>
+                        <a href="{% url 'profiles:profile_detail'  user.username %}" style="font-size: 15px; color: black; text-align: center;">{{ notification.sender.profile.first_name|title }} {{ notification.sender.profile.last_name|title }}</a> <br>
+                        <a href="{% url 'profiles:profile_detail'  user.username %}" style="font-size: 15px; color: black; text-align: center;"><b><i class="bi bi-chat-dots-fill" style="color: rgb(252, 122, 1);"></i> Commented on your post</b></a> <br>
+                        <a href="{% url 'profiles:profile_detail'  user.username %}" style="font-size: 10px; color: rgb(75, 75, 75); ">{{ notification.date }}</a>
                       </div>
 
-                      <a href="{% url 'profile' user.username %}" class="side-menu__user-avatar" style="margin-left: 20px;">
+                      <a href="{% url 'profiles:profile_detail'  user.username %}" class="side-menu__user-avatar" style="margin-left: 20px;">
                         <img src="{{ notification.post.picture.url }}" alt="User Picture">
                       </a>
                   </div>
@@ -106,7 +106,7 @@
 
             <!-- third Section -->
 
-            
+
 
         </form>
 
@@ -154,7 +154,6 @@
           </ul>
         </nav>
         <div class="copyright-notice">
-          &copy 2019 Instagram
         </div>
       </div>
     </footer>

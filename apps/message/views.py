@@ -6,17 +6,6 @@ from apps.users.models import User
 from .models import Chat, Participant
 
 
-def chat(request):
-    users = User.objects.all()
-    context = {
-        'users': users
-    }
-    return render(request, 'accounts/chat.html', context)
-
-
-def room(request, room_name):
-    return render(request, "accounts/room.html", {"room_name": room_name})
-
 class MessageView(TemplateView):
     template_name = "accounts/chat.html"
 
@@ -50,4 +39,3 @@ def create_chat(request, user_id):
         Participant.objects.create(user=request.user, chat=chat)
 
         return redirect(f'/messages/message.css/{chat.name}/')
-
