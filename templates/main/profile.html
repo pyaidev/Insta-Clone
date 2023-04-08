@@ -55,10 +55,9 @@
                     </form>
                     {% endif %}
                     <br>
-                    {% if request.user.is_authenticated and request.user != profile.user %}
-                    <a href="" class="btn profile-edit-btn">Message</a> <br><br
-                        {% endif %}
-
+{#                   {% if user != request.user %}#}
+                    <a href="{% url 'message:create-chat' user.id %}"><button  class="btn profile-edit-btn">Message</button></a>
+{#                    {% endif %}#}
 
                 </div>
 
