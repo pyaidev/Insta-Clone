@@ -41,9 +41,11 @@ class Profile(TimeStampedModel):
 
 class Follower(models.Model):
     followed_to = models.ForeignKey(
-        Profile, on_delete=models.CASCADE, related_name='followed_to')
+        Profile, on_delete=models.CASCADE, related_name='followings'
+    )
     followed_by = models.ForeignKey(
-        Profile, on_delete=models.CASCADE, related_name='followed_by')
+        Profile, on_delete=models.CASCADE, related_name='followers'
+    )
 
     def __str__(self):
         return f"{str(self.followed_by)}"
