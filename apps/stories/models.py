@@ -3,6 +3,7 @@ from django.db import models
 from apps.common.models import TimeStampedModel
 from apps.posts.choices import MediaTypes
 from apps.profiles.models import Profile
+from apps.users.models import User
 
 
 class Story(TimeStampedModel):
@@ -27,3 +28,15 @@ class StoryContent(TimeStampedModel):
     class Meta:
         verbose_name = "ContentStory"
         verbose_name_plural = "ContentStory"
+
+
+class StoryViewed(TimeStampedModel):
+    story = models.ForeignKey(Story, on_delete=models.CASCADE, related_name='views')
+    user = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name='viewed_stories')
+
+    def __str__(self):
+        return f'{str(self.id)}'
+
+    class Meta:
+        verbose_name = "Viewed Story"
+        verbose_name_plural = "Viewed Story"

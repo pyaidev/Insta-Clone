@@ -7,5 +7,4 @@ def send_sms_by_email(email, code):
     message = f'\n\nYour verification code : {code}\n\n'
     print(message)
     mail_sent = send_mail(subject, message, settings.EMAIL_HOST_USER, [email])
-    print(mail_sent, 'send_sms_by_email')
     return mail_sent

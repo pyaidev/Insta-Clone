@@ -1,4 +1,5 @@
-from django.shortcuts import render, redirect
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.shortcuts import render, redirect, get_object_or_404
 from django.utils import timezone
 from django.views import View
 from django.views.generic import TemplateView
@@ -7,10 +8,11 @@ from apps.stories.models import Story, StoryContent
 
 
 class CreateStoryView(View):
+    def get(self, request):
+        return render(request, 'main/create_story.html')
 
     def post(self, request):
         user = request.user.profile
-        data = request.POST
         files = request.FILES.getlist('files')
         story = Story.objects.create(user=user)
 
@@ -22,22 +24,16 @@ class CreateStoryView(View):
 
         return redirect("/")
 
-    def get(self, request):
-        return render(request, 'main/create_story.html')
 
-
-class StoriesDetail(TemplateView):
-    template_name = "main/detail_story.html"
+class StoryDetailView(TemplateView):
+    template_name = "main/story_detail.html"
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-
-        username = kwargs.get('username', None)
-        if not username:
-            return context
-
-        stories = Story.objects.filter(user__username=username,
-                                       created_at__gte=timezone.now() - timezone.timedelta(hours=24))
+        stories = Story.objects.filter(
+            created_at__gte=timezone.now() - timezone.timedelta(hours=24),
+            user__user__username=self.kwargs['username']
+        )
 
         context['stories'] = stories
         return context

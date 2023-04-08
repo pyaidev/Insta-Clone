@@ -44,17 +44,9 @@ class RegisterView(View):
             # form.save()
             data = form.cleaned_data
             email = data['email']
-
-            # user = authenticate(password=password, username=username)
-            # login(request, user)
             code = get_random_string(length=4, allowed_chars='1234567890')
             session = get_random_string(length=16)
             send_sms_by_email(email, code)
-            # email_data = {
-            #     'session': session,
-            #     'code': code,
-            # }
-            # cache.set(email, email_data, 300)
             data.update({'code': code})
             cache.set(session, data, 300)
             response = redirect('verify_email')
@@ -62,26 +54,6 @@ class RegisterView(View):
             return response
 
         return render(request, 'accounts/register.html', {"forms": form})
-
-
-# def register(request):
-#     form = UsersCreationForm()
-#     if request.method == "POST":
-#         form = UsersCreationForm(request.POST)
-#         if form.is_valid():
-#             form.save()
-#             username = form.cleaned_data['username']
-#             password = form.cleaned_data['password1']
-#             email = form.cleaned_data['email']
-#
-#             user = authenticate(password=password, username=username)
-#             login(request, user)
-#             code = get_random_string(length=4, allowed_chars='1234567890')
-#             send_sms_by_email(email, code)
-#
-#             return redirect('verify_email')
-#
-#     return render(request, 'accounts/register.html', {"forms": form})
 
 
 def verify_email(request):

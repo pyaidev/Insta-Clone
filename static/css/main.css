@@ -126,3 +126,7 @@
 .reaction-wrapper .icon.save{
     margin-left: auto;
 }
+
+.navbar{
+    display: none;
+}

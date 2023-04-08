@@ -6,41 +6,26 @@
 <main class="main-container">
     <section class="content-container">
         <div class="content">
-            <div class="stories">
-                <button class="stories__left-button">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                        <path fill="var(--primary)"
-                              d="M256 504C119 504 8 393 8 256S119 8 256 8s248 111 248 248-111 248-248 248zM142.1 273l135.5 135.5c9.4 9.4 24.6 9.4 33.9 0l17-17c9.4-9.4 9.4-24.6 0-33.9L226.9 256l101.6-101.6c9.4-9.4 9.4-24.6 0-33.9l-17-17c-9.4-9.4-24.6-9.4-33.9 0L142.1 239c-9.4 9.4-9.4 24.6 0 34z"></path>
-                    </svg>
-                </button>
-                <div class="stories__content">
+            <section class="main">
+                <div class="wrapper">
+                    <div class="left-col">
+                        <div class="status-wrapper">
+                            {% for story in stories %}
+                            <div class="status-card">
 
+                                <div class="profile-pic">
+                                    <a href="{% url 'detail_story' story.user.user.username %}">
+                                        <img src="{{ story.user.image.url }}" alt="">
+                                    </a>
+                                </div>
+                                <p class="username">@{{ story.user.user.username }}</p>
+                            </div>
+                            {% endfor %}
 
-                    <button class="story">
-                        <div class="story__avatar">
-                            <div class="story__border">
-                                <svg width="64" height="64" xmlns="http://www.w3.org/2000/svg">
-                                    <circle r="31" cy="32" cx="32"/>
-                                </svg>
-                            </div>
-                            <div class="story__picture">
-                                <img src="{{request.user.profile.image.url}}"
-                                     style="width: 80px; height: 80px; object-fit: cover;">
-                            </div>
                         </div>
-                        <span class="story__user">@{{request.user.username}}</span>
-                    </button>
-
-
+                    </div>
                 </div>
-                <button class="stories__right-button">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
-                        <path fill="var(--primary)"
-                              d="M256 8c137 0 248 111 248 248S393 504 256 504 8 393 8 256 119 8 256 8zm113.9 231L234.4 103.5c-9.4-9.4-24.6-9.4-33.9 0l-17 17c-9.4 9.4-9.4 24.6 0 33.9L285.1 256 183.5 357.6c-9.4 9.4-9.4 24.6 0 33.9l17 17c9.4 9.4 24.6 9.4 33.9 0L369.9 273c9.4-9.4 9.4-24.6 0-34z"></path>
-                    </svg>
-                </button>
-            </div>
-
+            </section>
             <div class="posts">
                 {% for post in post_items %}
                 <article class="post">
@@ -238,11 +223,15 @@
         </div>
 
         <section class="side-menu">
+        <a href="{% url 'create_story' %}"
+                   class="side__user-button"> Create Story</a>
             <div class="side-menu__user-profile">
-                <a href="{% url 'profiles:profile_detail' request.user.username %}" target="_blank"
-                   class="side-menu__user-avatar">
-                    <img src="{{ request.user.profile.image.url }}" alt="User Picture">
-                </a>
+                <div class="profile-pic">
+                    <a href="{% url 'detail_story' request.user.username %}" target="_blank"
+                       class="side-menu__user-avatar">
+                        <img src="{{ request.user.profile.image.url }}" alt="User Picture">
+                    </a>
+                </div>
                 <div class="side-menu__user-info">
                     {% if user.profile.first_name %}
                     <a href="{% url 'profiles:profile_detail' request.user.username %}">{{request.user.profile.first_name|title
@@ -253,7 +242,9 @@
                     <span>@{{request.user.username}}</span>
                 </div>
                 <a href="{% url 'profiles:profile_detail' request.user.username %}"
-                   class="side-menu__user-button">View Profile</a>
+                   class="side-menu__user-button">View Profile </a>
+
+
             </div>
 
             <div class="side-menu__suggestions-section">
@@ -290,4 +281,7 @@
         </section>
     </section>
 </main>
+
+
+
 {% endblock content %}
