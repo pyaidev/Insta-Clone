@@ -4,6 +4,8 @@ from django.core.cache import cache
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from django.views import View
+
 from django.urls import reverse
 from django.utils.crypto import get_random_string
 
@@ -29,6 +31,39 @@ def login_view(request):
     return render(request, 'accounts/login.html', {})
 
 
+class RegisterView(View):
+
+    def get(self, request):
+        form = UsersCreationForm()
+
+        return render(request, 'accounts/register.html', {"forms": form})
+
+    def post(self, request):
+        form = UsersCreationForm(request.POST)
+        if form.is_valid():
+            # form.save()
+            data = form.cleaned_data
+            email = data['email']
+
+            # user = authenticate(password=password, username=username)
+            # login(request, user)
+            code = get_random_string(length=4, allowed_chars='1234567890')
+            session = get_random_string(length=16)
+            send_sms_by_email(email, code)
+            # email_data = {
+            #     'session': session,
+            #     'code': code,
+            # }
+            # cache.set(email, email_data, 300)
+            data.update({'code': code})
+            cache.set(session, data, 300)
+            response = redirect('verify_email')
+            response.set_cookie('session', session)
+            return response
+
+        return render(request, 'accounts/register.html', {"forms": form})
+
+
 # def register(request):
 #     form = UsersCreationForm()
 #     if request.method == "POST":
@@ -49,23 +84,34 @@ def login_view(request):
 #     return render(request, 'accounts/register.html', {"forms": form})
 
 
-# def verify_email(request):
-#     if request.method == 'POST':
-#         r = request.POST
-#         code = r['num1'] + r['num2'] + r['num3'] + r['num4']
-#         user = cache.get('user')
-#
-#         if cache.get('session') == r['session'] and cache.get('code') == code:
-#             user = User.objects.get(email=user['email'])
-#             user.is_active = True
-#             user.save()
-#             login(request, user)
-#             messages.success(request, 'Your email has been verified. You are now logged in.')
-#             return redirect('profile_create')
-#         else:
-#             messages.error(request, 'The verification code you entered is incorrect. Please try again.')
-#
-#     return render(request, 'accounts/verificate.html')
+def verify_email(request):
+    if request.method == 'POST':
+        r = request.POST
+        code = r['num1'] + r['num2'] + r['num3'] + r['num4']
+        session = request.COOKIES.get('session', None)
+        if session is not None:
+            session_data = cache.get(session)
+            valid_code = session_data.pop('code')
+
+            if valid_code == code:
+                password = session_data.pop('password1')
+
+                user = User(**session_data)
+                user.is_active = True
+                user.set_password(password)
+                print(1)
+                user.save()
+                print(2)
+                user = authenticate(password=password, username=user.username)
+                login(request, user)
+                print(3)
+                messages.success(request, 'Your email has been verified. You are now logged in.')
+                return redirect('profile_create')
+            else:
+                messages.error(request, "Incorrect code!", extra_tags='danger')
+                return render(request, 'accounts/verificate.html')
+
+    return render(request, 'accounts/verificate.html')
 
 
 def profile(request):
