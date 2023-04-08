@@ -195,26 +195,28 @@
                                                 </form>
 
 
-                                                <h2 id="comments">Comments</h2>
-                                                {% for comment in comments %}
-                                                    <div class="bg-white p-2">
-                                                        <div class="d-flex flex-row user-info">
-                                                            <img class="rounded-circle" src="{{comment.user.profile.image.url}}" width="30" height="30">
-                                                            <a href="" style="text-decoration: none;">
-                                                                <div class="d-flex flex-column justify-content-start ml-2">
-                                                                    <span class="d-block font-weight-bold name">
-                                                                        {{comment.user.profile.first_name}} {{comment.user.profile.last_name}}
-                                                                    </span>
-                                                                    <span class="date text-black-50 ms-2 pt-2"> {{comment.created_at}}
-                                                                    </span>
-                                                                </div>
-                                                            </a>
+                                                {% if comments %}
+                                                    <h2 id="comments">Comments</h2>
+                                                    {% for comment in comments %}
+                                                        <div class="bg-white p-2">
+                                                            <div class="d-flex flex-row user-info">
+                                                                <img class="rounded-circle" src="{{comment.user.profile.image.url}}" width="30" height="30">
+                                                                <a href="" style="text-decoration: none;">
+                                                                    <div class="d-flex flex-column justify-content-start ml-2">
+                                                                        <span class="d-block font-weight-bold name">
+                                                                            {{comment.user.profile.first_name}} {{comment.user.profile.last_name}}
+                                                                        </span>
+                                                                        <span class="date text-black-50 ms-2 pt-2"> {{comment.created_at}}
+                                                                        </span>
+                                                                    </div>
+                                                                </a>
+                                                            </div>
+                                                            <div class="mt-2">
+                                                                <p class="comment-text">{{ comment.text }}</p>
+                                                            </div>
                                                         </div>
-                                                        <div class="mt-2">
-                                                            <p class="comment-text">{{ comment.text }}</p>
-                                                        </div>
-                                                    </div>
-                                                {% endfor %}
+                                                    {% endfor %}
+                                                {% endif %}
 
 
 

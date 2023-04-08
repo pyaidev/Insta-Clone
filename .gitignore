@@ -373,3 +373,4 @@ Temporary Items
 *.icloud
 
 celerybeat-schedule.db
+media/

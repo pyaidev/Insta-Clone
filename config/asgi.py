@@ -8,7 +8,7 @@ from channels.security.websocket import AllowedHostsOriginValidator
 
 import apps.message.routing
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.base')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'config.settings.develop')
 
 application = ProtocolTypeRouter({
     'http': get_asgi_application(),
