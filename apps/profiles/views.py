@@ -33,15 +33,16 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         profile = self.get_object()
-        followers = Follower.objects.filter(followed_to=profile)
-        post = Post.objects.filter(user__username=self.kwargs.get('username')).order_by('-created_at')
-        context['followers_count'] = followers.count()
-        context['followers'] = followers
-        context['posts'] = post
 
-        if self.request.user.is_authenticated:
-            user_follow = Follower.objects.filter(followed_by=self.request.user.profile, followed_to=profile).exists()
-            context['user_follow'] = user_follow
+        # followers
+        followers = profile.get_followers()
+        context['followers'] = followers
+        # followings
+        followings = profile.get_followings()
+        context['followings'] = followings
+        # posts
+        posts = Post.objects.filter(user__username=self.kwargs.get('username')).order_by('-created_at')
+        context['posts'] = posts
 
         return context
 

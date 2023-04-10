@@ -7,43 +7,45 @@
 <title>Profile</title>
 {%endblock title%}
 
-<head>
-    {% block css %}
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp">
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
-        <link rel="stylesheet" href="{% static 'css/profile.css' %}">
-    {%endblock css %}
-</head>
+{% block style %}
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet"
+      integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+{% endblock style %}
 
 
-<header>
+<header class="pt-5">
     <div class="container">
 
         <div class="profile">
 
-            <div class="profile-image">
+                <div class="profile-image">
+                    {% if profile.image %}
+                        <img src="{{ profile.image.url }}" alt="" >
+                    {% else %}
+                        <img src="{% static 'default.jpg' %}" alt="">
+                    {% endif %}
+                </div>
 
-                <img src="{{ profile.image.url }}"
-                     alt="">
-            </div>
-
-            <div class="profile-side">
                 <div class="profile-user-settings">
 
-                    <h1 class="profile-user-name">{{profile.user.username}}</h1>
-                    {% if request.user.username == profile.user.username %}
-                    <a href="{% url 'profiles:edit-profile' profile.user.username %}" style="text-decoration:none" class="profile-btn profile-edit-btn">Edit Profile</a>
-                    <button type="button" class="btn btn-info btn-lg" type="button" data-toggle="modal" data-target="#exampleModal"  style="display:inline-block; border-radius: 5px; background-color: #5bc0de; color: #fff; font-size: 16px; text-decoration: none; padding: 2px 12px;">
+                    <h1 class="profile-user-name">{{ profile.user.username }}</h1>
+                    {% if profile.user == request.user %}
+                    <a href="{% url 'profiles:edit-profile' profile.user.username %}">
+                        <button class="btn profile-edit-btn">Edit Profile</button>
+                    </a>
+                    <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#exampleModal"  style="display:inline-block; border-radius: 5px; background-color: #5bc0de; color: #fff; font-size: 16px; text-decoration: none; padding: 2px 12px;">
                         <span class="glyphicon glyphicon-log-out"></span> Log out
                       </button>
                     {% elif user_follow %}
+                    <a href="{% url 'unfollow_user' user.username %}"><button  class="btn profile-edit-btn">Following</button></a>
                     <form action="{% url 'profiles:unfollow' profile.user.username %}" method="POST">
                         {% csrf_token %}
                         <button class="btn profile-edit-btn">Following</button>
@@ -55,65 +57,58 @@
                         </button>
                     </form>
                     {% endif %}
-                    <br>
-                    {% if request.user.is_authenticated and request.user != profile.user %}
-                    <a href="" class="btn profile-edit-btn">Message</a> <br><br>
-                     {% endif %}
+                    {% if profile.user != request.user %}
+                    <a href="{% url 'create-chat' user.id %}"><button  class="btn profile-edit-btn">Message</button></a>
+                    {% endif %}
 
-{#                   {% if user != request.user %}#}
-                    <a href="{% url 'message:create-chat' user.id %}"><button  class="btn profile-edit-btn">Message</button></a>
-{#                    {% endif %}#}
+                    </button>
 
-                </div>
-
-                <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                        <!-- LogoutModal -->
+                        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog" role="document">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                <h5 class="modal-title" id="exampleModalLabel" style="font-size: 24px; font-weight: bold; color: #000; margin-top: 0; margin-bottom: 1rem;">Do you want to log out?</h5>
+                                <h5 class="modal-title" id="exampleModalLabel" style="font-size: 24px; font-weight: bold; color: #000; margin-top: 0; margin-bottom: 1rem;">Tizimdan chiqishni xohlaysizmi?</h5>
                                 <button type="button" class="close" data-dismiss="modal" aria-label="Close" style="position: absolute; top: 0; right: 0; padding: 1rem; color: #000; border: none; background: none; font-size: 2rem;">
                                     <span aria-hidden="true">&times;</span>
                                 </button>
                                 </div>
                                 <div class="modal-footer">
-                                <button type="button" class="btn btn-secondary" style="display:inline-block; border-radius: 5px; background-color: #6c757d; color: #fff; font-size: 18px; text-decoration: none; padding: 10px 20px;"  data-dismiss="modal">No</button>
-                                <a href="{% url 'profiles:logout' %}"><button  type="button" class="btn btn-primary" style="display:inline-block; border-radius: 5px; background-color: #007bff; color: #fff; font-size: 18px; text-decoration: none; padding: 10px 20px;">Yes</button></a>
+                                <button type="button" class="btn btn-secondary" style="display:inline-block; border-radius: 5px; background-color: #6c757d; color: #fff; font-size: 18px; text-decoration: none; padding: 10px 20px;"  data-dismiss="modal">Yo`q</button>
+                                <a href="{% url 'profiles:logout' %}"><button  type="button" class="btn btn-primary" style="display:inline-block; border-radius: 5px; background-color: #007bff; color: #fff; font-size: 18px; text-decoration: none; padding: 10px 20px;">Ha</button></a>
                                 </div>
                             </div>
                             </div>
                         </div>
+                     <!-- EndLogout Modal -->
+                </div>
 
                 <div class="profile-stats">
 
                     <ul>
-                        <li><span class="profile-stat-count">{{ profile.post_count }}</span> posts</li>
-
-                        <li data-bs-toggle="modal"  data-bs-target="#Followers"><span class="profile-stat-count">{{ followers_count }} </span>
-                            followers
+                        <li><span class="profile-stat-count">{{ posts.count }}</span> posts</li>
+                        <li data-bs-toggle="modal" data-bs-target="#Followers"><span
+                                class="profile-stat-count">{{ followers.count }}</span> followers
                         </li>
-                        <li data-bs-toggle="modal" data-bs-target="#Followings"><span class="profile-stat-count">{{ profile.followings.count }}</span>
-                            following
-                        </li>
+                        <li data-bs-toggle="modal" data-bs-target="#Followings"><span class="profile-stat-count">{{ followings.count }}</span> following</li>
                     </ul>
+
                 </div>
 
-
                 <div class="profile-bio">
-
-                    <span class="profile-real-name">{{ profile.user.first_name }} {{ profile.user.last_name }}</span>
-                    <p>{{ profile.bio }}</p>
-
+                    <p>{{ profile.user.get_full_name }}</p>
+                    <p>
+                        {% if profile.user.bio %}
+                            {{ profile.user.bio }}
+                        {% endif %}
+                    </p>
                 </div>
 
             </div>
-
-
-        </div>
-        <!-- End of profile section -->
+            <!-- End of profile section -->
 
     </div>
     <!-- End of container -->
-
 </header>
 
 <main>
@@ -182,20 +177,20 @@
                     <div class="side-menu__suggestions-content">
                         {% for follower in followers %}
                             <div class="side-menu__suggestion">
-                                <a href="{% url 'profiles:profile_detail' follower.followed_by.user.username %}" class="side-menu__suggestion-avatar">
-                                    {% if follower.followed_by.image %}
-                                        <img src="{{ follower.followed_by.image.url }}" alt="User Picture">
+                                <a href="{% url 'profiles:profile_detail' follower.user.username %}" class="side-menu__suggestion-avatar">
+                                    {% if follower.image %}
+                                        <img src="{{ follower.image.url }}" alt="User Picture">
                                     {% else %}
                                         <img src="{% static 'images/empty-user.png' %}" alt="User Picture">
                                     {% endif %}
                                 </a>
                                 <div class="side-menu__suggestion-info">
-                                    <a href="{% url 'profiles:profile_detail' follower.followed_by.user.username %}">
-                                        {{ follower.followed_by.user.username }}</a>
-                                    <a href="{% url 'profiles:profile_detail' follower.followed_by.user.username %}"><span>@{{ follower.followed_by.user.username }}</span></a>
+                                    <a href="{% url 'profiles:profile_detail' follower.user.username %}">
+                                        {{ follower.user.username }}</a>
+                                    <a href="{% url 'profiles:profile_detail' follower.user.username %}"><span>@{{ follower.user.username }}</span></a>
                                 </div>
-                                {% if request.user.username == profile.user.username %}
-                                    <form action="{% url 'profiles:remove_follower' follower.followed_by.user.username %}" method="POST">
+                                {% if request.user == profile.user %}
+                                    <form action="{% url 'profiles:remove_follower' follower.user.username %}" method="POST">
                                         {% csrf_token %}
                                         <button class="btn profile-edit-btn">Remove</button>
                                     </form>
@@ -211,47 +206,47 @@
         </div>
     </div>
 </div>
-{#<div class="modal fade" id="Followings" tabindex="-1" aria-labelledby="FollowingsLabel" aria-hidden="true">#}
-{#    <div class="modal-dialog modal-dialog-centered">#}
-{#        <div class="modal-content">#}
-{#            <div class="modal-header">#}
-{#                <h1 class="modal-title fs-5" id="FollowersLabel">Followings</h1>#}
-{#                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>#}
-{#            </div>#}
-{#            <div class="modal-body">#}
-{#                <div class="side-menu__suggestions-section">#}
-{#                    <div class="side-menu__suggestions-content">#}
-{#                        {% for follower in followers %}#}
-{#                            <div class="side-menu__suggestion">#}
-{#                                <a href="{% url 'profiles:profile_detail' follower.followed_to.user.username %}" class="side-menu__suggestion-avatar">#}
-{#                                    {% if follower.followed_to.image %}#}
-{#                                        <img src="{{ follower.followed_to.image.url }}" alt="User Picture">#}
-{#                                    {% else %}#}
-{#                                        <img src="{% static 'images/empty-user.png' %}" alt="User Picture">#}
-{#                                    {% endif %}#}
-{#                                </a>#}
-{#                                <div class="side-menu__suggestion-info">#}
-{#                                    <a href="{% url 'profiles:profile_detail' follower.followed_to.user.username %}">#}
-{#                                        {{ follower.followed_by.user.username }}</a>#}
-{#                                    <a href="{% url 'profiles:profile_detail' follower.followed_to.user.username %}"><span>@{{ follower.followed_to.user.username }}</span></a>#}
-{#                                </div>#}
-{#                                {% if request.user.username == profile.user.username %}#}
-{#                                    <form action="{% url 'profiles:remove_follower' follower.followed_to.user.username %}" method="POST">#}
-{#                                        {% csrf_token %}#}
-{#                                        <button class="btn profile-edit-btn">Remove</button>#}
-{#                                    </form>#}
-{#                                {% endif %}#}
-{#                            </div>  azz#}
-{#                        {% endfor %}#}
-{#                    </div>#}
-{#                </div>#}
-{#            </div>#}
-{#            <div class="modal-footer">#}
-{#                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>#}
-{#            </div>#}
-{#        </div>#}
-{#    </div>#}
-{#</div>#}
+<div class="modal fade" id="Followings" tabindex="-1" aria-labelledby="FollowingsLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5" id="FollowingLabel">Followings</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="side-menu__suggestions-section">
+                    <div class="side-menu__suggestions-content">
+                        {% for following in followings %}
+                            <div class="side-menu__suggestion">
+                                <a href="{% url 'profiles:profile_detail' follower.user.username %}" class="side-menu__suggestion-avatar">
+                                    {% if following.image %}
+                                        <img src="{{ follower.image.url }}" alt="User Picture">
+                                    {% else %}
+                                        <img src="{% static 'images/empty-user.png' %}" alt="User Picture">
+                                    {% endif %}
+                                </a>
+                                <div class="side-menu__suggestion-info">
+                                    <a href="{% url 'profiles:profile_detail' follower.user.username %}">
+                                        {{ following.user.username }}</a>
+                                    <a href="{% url 'profiles:profile_detail' follower.user.username %}"><span>@{{ follower.user.username }}</span></a>
+                                </div>
+                                {% if request.user == profile.user %}
+                                    <form action="{% url 'profiles:remove_follower' follower.user.username %}" method="POST">
+                                        {% csrf_token %}
+                                        <button class="btn profile-edit-btn">Remove</button>
+                                    </form>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 

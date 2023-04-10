@@ -42,12 +42,22 @@ class Profile(TimeStampedModel):
             img = im.resize(newsize)
             img.save(self.image.path)
 
+    def get_followers(self):
+        followers = Profile.objects.filter(followings__followed_to=self)
+        return followers
+
+    def get_followings(self):
+        followings = Profile.objects.filter(followers__followed_by=self)
+        return followings
+
 
 class Follower(models.Model):
     followed_to = models.ForeignKey(
-        Profile, on_delete=models.CASCADE, related_name='followers', null=True)
+        Profile, on_delete=models.CASCADE, related_name='followers', null=True
+    )
     followed_by = models.ForeignKey(
-        Profile, on_delete=models.CASCADE, related_name='followings', null=True)
+        Profile, on_delete=models.CASCADE, related_name='followings', null=True
+    )
 
     def __str__(self):
         return f"from {self.followed_by.user} to {self.followed_to.user}"
