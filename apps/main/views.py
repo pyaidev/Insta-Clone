@@ -23,8 +23,12 @@ class HomeView(LoginRequiredMixin, View):
         like_indexes = PostLike.objects.filter(user=user).values_list('post__id', flat=True)
         suggestion_profiles = get_main_profile_suggestions(user.id, 5)
 
-        followings = [follower.followed_to for follower in user.profile.followings.all()]
-        stories = Story.objects.filter(user__in=followings).exclude(user=user.profile).filter(
+        # followings = [follower.followed_to for follower in user.profile.followings.all()]
+        # stories = Story.objects.filter(user__in=followings).exclude(user=user.profile).filter(
+        #     created_at__gte=timezone.now() - timezone.timedelta(hours=24)
+        # )
+        stories = Story.objects.filter(
+            user__followers__followed_by=request.user.profile,
             created_at__gte=timezone.now() - timezone.timedelta(hours=24)
         )
 
@@ -34,7 +38,7 @@ class HomeView(LoginRequiredMixin, View):
                 'post_items': posts,
                 'like_indexes': list(like_indexes),
                 'suggestion_profiles': suggestion_profiles,
-                'stories':stories
+                'stories': stories
             }
         )
 

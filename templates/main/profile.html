@@ -44,8 +44,7 @@
                     <button type="button" class="btn btn-info btn-lg" data-toggle="modal" data-target="#exampleModal"  style="display:inline-block; border-radius: 5px; background-color: #5bc0de; color: #fff; font-size: 16px; text-decoration: none; padding: 2px 12px;">
                         <span class="glyphicon glyphicon-log-out"></span> Log out
                       </button>
-                    {% elif user_follow %}
-                    <a href="{% url 'unfollow_user' user.username %}"><button  class="btn profile-edit-btn">Following</button></a>
+                    {% elif is_followed %}
                     <form action="{% url 'profiles:unfollow' profile.user.username %}" method="POST">
                         {% csrf_token %}
                         <button class="btn profile-edit-btn">Following</button>
@@ -58,7 +57,7 @@
                     </form>
                     {% endif %}
                     {% if profile.user != request.user %}
-                    <a href="{% url 'create-chat' user.id %}"><button  class="btn profile-edit-btn">Message</button></a>
+                    <a href="{% url 'message:create-chat' user.id %}"><button  class="btn profile-edit-btn">Message</button></a>
                     {% endif %}
 
                     </button>
@@ -98,8 +97,8 @@
                 <div class="profile-bio">
                     <p>{{ profile.user.get_full_name }}</p>
                     <p>
-                        {% if profile.user.bio %}
-                            {{ profile.user.bio }}
+                        {% if profile.bio %}
+                            {{ profile.bio }}
                         {% endif %}
                     </p>
                 </div>
@@ -186,8 +185,10 @@
                                 </a>
                                 <div class="side-menu__suggestion-info">
                                     <a href="{% url 'profiles:profile_detail' follower.user.username %}">
-                                        {{ follower.user.username }}</a>
-                                    <a href="{% url 'profiles:profile_detail' follower.user.username %}"><span>@{{ follower.user.username }}</span></a>
+                                        {{ follower.user.get_full_name }}</a>
+                                    <a href="{% url 'profiles:profile_detail' follower.user.username %}">
+                                        <span>@{{ follower.user.username }}</span>
+                                    </a>
                                 </div>
                                 {% if request.user == profile.user %}
                                     <form action="{% url 'profiles:remove_follower' follower.user.username %}" method="POST">
@@ -218,20 +219,20 @@
                     <div class="side-menu__suggestions-content">
                         {% for following in followings %}
                             <div class="side-menu__suggestion">
-                                <a href="{% url 'profiles:profile_detail' follower.user.username %}" class="side-menu__suggestion-avatar">
+                                <a href="{% url 'profiles:profile_detail' following.user.username %}" class="side-menu__suggestion-avatar">
                                     {% if following.image %}
-                                        <img src="{{ follower.image.url }}" alt="User Picture">
+                                        <img src="{{ following.image.url }}" alt="User Picture">
                                     {% else %}
                                         <img src="{% static 'images/empty-user.png' %}" alt="User Picture">
                                     {% endif %}
                                 </a>
                                 <div class="side-menu__suggestion-info">
-                                    <a href="{% url 'profiles:profile_detail' follower.user.username %}">
-                                        {{ following.user.username }}</a>
-                                    <a href="{% url 'profiles:profile_detail' follower.user.username %}"><span>@{{ follower.user.username }}</span></a>
+                                    <a href="{% url 'profiles:profile_detail' following.user.username %}">
+                                        {{ following.user.get_full_name }}</a>
+                                    <a href="{% url 'profiles:profile_detail' following.user.username %}"><span>@{{ following.user.username }}</span></a>
                                 </div>
                                 {% if request.user == profile.user %}
-                                    <form action="{% url 'profiles:remove_follower' follower.user.username %}" method="POST">
+                                    <form action="{% url 'profiles:remove_follower' following.user.username %}" method="POST">
                                         {% csrf_token %}
                                         <button class="btn profile-edit-btn">Remove</button>
                                     </form>

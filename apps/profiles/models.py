@@ -20,7 +20,7 @@ class Profile(TimeStampedModel):
     gender = models.CharField(max_length=15, choices=GENDER_CHOICES)
 
     def __str__(self):
-        return f'Profile of {self.user.email}'
+        return f"{self.user.get_full_name()} | {self.user.username}"
 
     @property
     def post_count(self):

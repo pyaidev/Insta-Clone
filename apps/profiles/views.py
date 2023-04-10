@@ -40,6 +40,9 @@ class ProfileDetailView(LoginRequiredMixin, DetailView):
         # followings
         followings = profile.get_followings()
         context['followings'] = followings
+        # is_followed
+        is_followed = profile.followers.filter(followed_by=self.request.user.profile).exists()
+        context['is_followed'] = is_followed
         # posts
         posts = Post.objects.filter(user__username=self.kwargs.get('username')).order_by('-created_at')
         context['posts'] = posts

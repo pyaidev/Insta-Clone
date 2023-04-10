@@ -140,7 +140,7 @@
                 <button class="profile-button" >
                     <div class="profile-button__border"></div>
 
-                    <a href="{% url 'profiles:profile_detail' username=request.user.username %}">
+                    <a href="{% url 'profiles:profile_detail' request.user.username %}">
                         <!--                        <a href="url 'profile' request.user">-->
                         <div class="profile-button__picture" >
                             <img src="{{ request.user.profile.image.url }}" alt="User Picture">
@@ -167,11 +167,6 @@
 
 {% block content %}
 {% endblock content %}
-
-
-</section>
-</section>
-</main>
 
 <nav class="navbar">
     <a href="#" class="navbar__button">
